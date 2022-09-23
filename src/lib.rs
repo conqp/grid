@@ -41,23 +41,23 @@ impl<T> Grid<T> {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &T> {
-        self.items.iter().flat_map(|line| line)
+        self.items.iter().flat_map(|row| row)
     }
 
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
-        self.items.iter_mut().flat_map(|line| line)
+        self.items.iter_mut().flat_map(|row| row)
     }
 
     pub fn enumerate(&self) -> impl Iterator<Item = (usize, usize, &T)> {
         self.items
             .iter()
             .enumerate()
-            .flat_map(|(y, line)| line.iter().enumerate().map(move |(x, item)| (x, y, item)))
+            .flat_map(|(y, row)| row.iter().enumerate().map(move |(x, item)| (x, y, item)))
     }
 
     pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (usize, usize, &mut T)> {
-        self.items.iter_mut().enumerate().flat_map(|(y, line)| {
-            line.iter_mut()
+        self.items.iter_mut().enumerate().flat_map(|(y, row)| {
+            row.iter_mut()
                 .enumerate()
                 .map(move |(x, item)| (x, y, item))
         })
