@@ -24,6 +24,10 @@ impl<T> Grid<T> {
         self.height
     }
 
+    pub fn len(&self) -> usize {
+        self.width * self.height
+    }
+
     pub fn get(&self, x: usize, y: usize) -> Option<&T> {
         if x < self.width() && y < self.height() {
             Some(&self.items[y][x])
