@@ -44,3 +44,28 @@ fn storage() {
     assert_eq!(grid.get(1, 3).unwrap(), "d");
     assert_eq!(grid.get(2, 3).unwrap(), "!");
 }
+
+#[test]
+fn neighbors() {
+    let mut grid = Grid::new(3, 4, String::new);
+    let text = "Hello world!";
+    let neighbors: [[&str; 3]; 4] = [
+        ["H", "e", "l"],
+        ["l", "o", " "],
+        ["w", "o", "r"],
+        ["l", "d", "!"],
+    ];
+
+    for (index, item) in grid.iter_mut().enumerate() {
+        item.push(text.chars().nth(index).unwrap());
+    }
+
+    for (x, y, item) in grid.enumerate() {
+        println!("Item at {}x{}: {}", x, y, item);
+    }
+
+    for (x, y, neighbor) in grid.neighbors(1, 1) {
+        println!("Neighbor: {}x{}: {}", x, y, neighbor);
+        assert_eq!(neighbor, neighbors[y][x]);
+    }
+}
