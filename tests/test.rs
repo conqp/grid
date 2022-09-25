@@ -19,7 +19,7 @@ fn size() {
     let grid = Grid::new(width, height, String::new);
     assert_eq!(grid.width(), width);
     assert_eq!(grid.height(), height);
-    assert_eq!(grid.len(), width * height);
+    assert_eq!(grid.size(), width * height);
 }
 
 #[test]
