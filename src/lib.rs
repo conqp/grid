@@ -57,7 +57,15 @@ impl<T> Grid<T> {
 
     pub fn enumerate(&self) -> impl Iterator<Item = (usize, usize, &T)> {
         self.items.iter().enumerate().map(|(index, item)| {
-            let (x, y) = self.index_to_coordinate(index);
+            let (x, y) = index_to_coordinate(index, self.width);
+            (x, y, item)
+        })
+    }
+
+    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (usize, usize, &mut T)> {
+        let width = self.width;
+        self.items.iter_mut().enumerate().map(move |(index, item)| {
+            let (x, y) = index_to_coordinate(index, width);
             (x, y, item)
         })
     }
@@ -80,12 +88,6 @@ impl<T> Grid<T> {
     fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
         y * self.width + x
     }
-
-    fn index_to_coordinate(&self, index: usize) -> (usize, usize) {
-        let x = index % self.width;
-        let y = (index - x) / self.width;
-        (x, y)
-    }
 }
 
 fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
@@ -93,4 +95,10 @@ fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
         .into_iter()
         .flat_map(|i| [i].into_iter().cycle().zip(NEIGHBOR_OFFSETS))
         .filter(|(x, y)| !(*x == 0 && *y == 0))
+}
+
+fn index_to_coordinate(index: usize, width: usize) -> (usize, usize) {
+    let x = index % width;
+    let y = (index - x) / width;
+    (x, y)
 }
