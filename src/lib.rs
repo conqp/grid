@@ -56,8 +56,8 @@ impl<T> Grid<T> {
     }
 
     pub fn enumerate(&self) -> impl Iterator<Item = (usize, usize, &T)> {
-        self.items.iter().enumerate().map(|(idx, item)| {
-            let (x, y) = self.index_to_coordinate(idx);
+        self.items.iter().enumerate().map(|(index, item)| {
+            let (x, y) = self.index_to_coordinate(index);
             (x, y, item)
         })
     }
