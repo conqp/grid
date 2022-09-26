@@ -75,12 +75,14 @@ impl<T> Grid<T> {
             .map(|(x, y)| (x, y, self.get(x, y).unwrap()))
     }
 
-    fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
+    fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> {
+        let width = self.width as isize;
+        let height = self.height as isize;
         neighbor_offsets()
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
-            .filter(|(dx, dy)| {
+            .filter(move |(dx, dy)| {
                 // remove elements outside of grid
-                0 <= *dx && *dx < self.width as isize && 0 <= *dy && *dy < self.height as isize
+                0 <= *dx && *dx < width && 0 <= *dy && *dy < height
             })
             .map(|(dx, dy)| (dx as usize, dy as usize))
     }
