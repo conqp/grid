@@ -1,16 +1,13 @@
 use itertools::Itertools;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Grid<T> {
     width: usize,
     height: usize,
     items: Vec<T>,
 }
 
-impl<T> Grid<T>
-where
-    T: Clone,
-{
+impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
@@ -70,15 +67,15 @@ where
             .map(|(x, y)| (x, y, self.get(x, y).unwrap()))
     }
 
-    pub fn on_grid(&self, x: isize, y: isize) -> bool {
-        0 <= x && x < self.width as isize && 0 <= y && y < self.height as isize
-    }
-
     fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         neighbor_offsets()
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
             .filter(|&(x, y)| self.on_grid(x, y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
+    }
+
+    fn on_grid(&self, x: isize, y: isize) -> bool {
+        0 <= x && x < self.width as isize && 0 <= y && y < self.height as isize
     }
 
     fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
