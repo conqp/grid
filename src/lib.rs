@@ -57,15 +57,7 @@ impl<T> Grid<T> {
 
     pub fn enumerate(&self) -> impl Iterator<Item = (usize, usize, &T)> {
         self.items.iter().enumerate().map(|(index, item)| {
-            let (x, y) = index_to_coordinate(index, self.width);
-            (x, y, item)
-        })
-    }
-
-    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (usize, usize, &mut T)> {
-        let width = self.width;
-        self.items.iter_mut().enumerate().map(move |(index, item)| {
-            let (x, y) = index_to_coordinate(index, width);
+            let (x, y) = self.index_to_coordinate(index);
             (x, y, item)
         })
     }
@@ -75,20 +67,25 @@ impl<T> Grid<T> {
             .map(|(x, y)| (x, y, self.get(x, y).unwrap()))
     }
 
-    fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> {
-        let width = self.width as isize;
-        let height = self.height as isize;
+    pub fn on_grid(&self, x: isize, y: isize) -> bool {
+        0 <= x && x < self.width as isize && 0 <= y && y < self.height as isize
+    }
+
+    fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         neighbor_offsets()
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
-            .filter(move |(dx, dy)| {
-                // remove elements outside of grid
-                0 <= *dx && *dx < width && 0 <= *dy && *dy < height
-            })
+            .filter(|(x, y)| self.on_grid(*x, *y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
     }
 
     fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
         y * self.width + x
+    }
+
+    fn index_to_coordinate(&self, index: usize) -> (usize, usize) {
+        let x = index % self.width;
+        let y = (index - x) / self.width;
+        (x, y)
     }
 }
 
@@ -98,10 +95,4 @@ fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
         .map(|items| (items[0] as isize, items[1] as isize))
         // skip zero offset
         .filter(|(x, y)| !(*x == 0 && *y == 0))
-}
-
-fn index_to_coordinate(index: usize, width: usize) -> (usize, usize) {
-    let x = index % width;
-    let y = (index - x) / width;
-    (x, y)
 }
