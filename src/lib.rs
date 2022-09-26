@@ -1,11 +1,11 @@
+use itertools::Itertools;
+
 #[derive(Debug)]
 pub struct Grid<T> {
     width: usize,
     height: usize,
     items: Vec<T>,
 }
-
-const NEIGHBOR_OFFSETS: [isize; 3] = [-1, 0, 1];
 
 impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
@@ -91,10 +91,7 @@ impl<T> Grid<T> {
 }
 
 fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
-    NEIGHBOR_OFFSETS
-        .into_iter()
-        .flat_map(|i| [i].into_iter().cycle().zip(NEIGHBOR_OFFSETS))
-        .filter(|(x, y)| !(*x == 0 && *y == 0))
+    (-1..1).combinations_with_replacement(2).map(|items| (items[0] as isize, items[1] as isize))
 }
 
 fn index_to_coordinate(index: usize, width: usize) -> (usize, usize) {
