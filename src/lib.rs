@@ -94,6 +94,7 @@ fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
     (-1..1)
         .combinations_with_replacement(2)
         .map(|items| (items[0] as isize, items[1] as isize))
+        // skip zero offset
         .filter(|(x, y)| !(*x == 0 && *y == 0))
 }
 
