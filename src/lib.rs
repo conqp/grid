@@ -91,7 +91,10 @@ impl<T> Grid<T> {
 }
 
 fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
-    (-1..1).combinations_with_replacement(2).map(|items| (items[0] as isize, items[1] as isize)).filter(|(x, y)| !(*x == 0 && *y == 0))
+    (-1..1)
+        .combinations_with_replacement(2)
+        .map(|items| (items[0] as isize, items[1] as isize))
+        .filter(|(x, y)| !(*x == 0 && *y == 0))
 }
 
 fn index_to_coordinate(index: usize, width: usize) -> (usize, usize) {
