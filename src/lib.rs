@@ -29,7 +29,7 @@ impl<T> Grid<T> {
     }
 
     pub fn get(&self, x: usize, y: usize) -> Result<&T, &str> {
-        if x < self.width() && y < self.height() {
+        if self.on_grid(x as isize, y as isize) {
             Ok(&self.items[self.coordinate_to_index(x, y)])
         } else {
             Err("coordinate not on grid")
@@ -37,7 +37,7 @@ impl<T> Grid<T> {
     }
 
     pub fn get_mut(&mut self, x: usize, y: usize) -> Result<&mut T, &str> {
-        if x < self.width() && y < self.height() {
+        if self.on_grid(x as isize, y as isize) {
             let index = self.coordinate_to_index(x, y);
             Ok(&mut self.items[index])
         } else {
