@@ -12,9 +12,7 @@ impl<T> Grid<T> {
         Self {
             width,
             height,
-            items: (0..height)
-                .flat_map(|_| (0..width).map(|_| initializer()))
-                .collect(),
+            items: (0..height*width).map(|_| initializer()).collect(),
         }
     }
 
