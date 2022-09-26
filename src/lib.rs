@@ -67,6 +67,16 @@ impl<T> Grid<T> {
             .map(|(x, y)| (x, y, &self.items[self.coordinate_to_index(x, y)]))
     }
 
+    fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
+        y * self.width + x
+    }
+
+    fn index_to_coordinate(&self, index: usize) -> (usize, usize) {
+        let x = index % self.width;
+        let y = (index - x) / self.width;
+        (x, y)
+    }
+
     fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         neighbor_offsets()
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
@@ -76,16 +86,6 @@ impl<T> Grid<T> {
 
     fn on_grid(&self, x: isize, y: isize) -> bool {
         0 <= x && x < self.width as isize && 0 <= y && y < self.height as isize
-    }
-
-    fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
-        y * self.width + x
-    }
-
-    fn index_to_coordinate(&self, index: usize) -> (usize, usize) {
-        let x = index % self.width;
-        let y = (index - x) / self.width;
-        (x, y)
     }
 }
 
