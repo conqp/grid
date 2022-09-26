@@ -1,13 +1,16 @@
 use itertools::Itertools;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Grid<T> {
     width: usize,
     height: usize,
     items: Vec<T>,
 }
 
-impl<T> Grid<T> {
+impl<T> Grid<T>
+where
+    T: Clone,
+{
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
@@ -74,7 +77,7 @@ impl<T> Grid<T> {
     fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         neighbor_offsets()
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
-            .filter(|(x, y)| self.on_grid(*x, *y))
+            .filter(|&(x, y)| self.on_grid(x, y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
     }
 
@@ -94,5 +97,5 @@ fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
         .combinations_with_replacement(2)
         .map(|items| (items[0] as isize, items[1] as isize))
         // skip zero offset
-        .filter(|(x, y)| !(*x == 0 && *y == 0))
+        .filter(|&(x, y)| !(x == 0 && y == 0))
 }
