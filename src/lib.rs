@@ -12,7 +12,7 @@ impl<T> Grid<T> {
         Self {
             width,
             height,
-            items: (0..height*width).map(|_| initializer()).collect(),
+            items: (0..height * width).map(|_| initializer()).collect(),
         }
     }
 
@@ -28,20 +28,20 @@ impl<T> Grid<T> {
         self.width * self.height
     }
 
-    pub fn get(&self, x: usize, y: usize) -> Option<&T> {
+    pub fn get(&self, x: usize, y: usize) -> Result<&T, &str> {
         if x < self.width() && y < self.height() {
-            Some(&self.items[self.coordinate_to_index(x, y)])
+            Ok(&self.items[self.coordinate_to_index(x, y)])
         } else {
-            None
+            Err("coordinate not on grid")
         }
     }
 
-    pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
+    pub fn get_mut(&mut self, x: usize, y: usize) -> Result<&mut T, &str> {
         if x < self.width() && y < self.height() {
             let index = self.coordinate_to_index(x, y);
-            Some(&mut self.items[index])
+            Ok(&mut self.items[index])
         } else {
-            None
+            Err("coordinate not on grid")
         }
     }
 
