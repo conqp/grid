@@ -60,6 +60,13 @@ impl<T> Grid<T> {
         })
     }
 
+    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (usize, usize, &mut T)> {
+        self.items.iter_mut().enumerate().map(|(index, item)| {
+            let (x, y) = index_to_coordinate(self.width, index);
+            (x, y, item)
+        })
+    }
+
     pub fn neighbors(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize, &T)> {
         neighbor_indices(self.width, self.height, x, y)
             .map(|(x, y)| (x, y, &self.items[coordinate_to_index(self.width, x, y)]))
