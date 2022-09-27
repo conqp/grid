@@ -68,7 +68,7 @@ impl<T> Grid<T> {
     }
 
     pub fn neighbors(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize, &T)> {
-        neighbor_indices(self.width, self.height, x, y)
+        neighbor_coordinates(self.width, self.height, x, y)
             .map(|(x, y)| (x, y, &self.items[coordinate_to_index(self.width, x, y)]))
     }
 }
@@ -83,7 +83,7 @@ fn index_to_coordinate(width: usize, index: usize) -> (usize, usize) {
     (x, y)
 }
 
-fn neighbor_indices(
+fn neighbor_coordinates(
     width: usize,
     height: usize,
     x: usize,
