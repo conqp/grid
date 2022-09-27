@@ -92,5 +92,5 @@ fn neighbor_offsets(dimension: usize) -> impl Iterator<Item = Vec<isize>> {
         .map(|index| index as isize)
         .combinations_with_replacement(dimension)
         // skip zero offset
-        .filter(|items| !items.into_iter().all(|&item| item == 0))
+        .filter(|items| !items.iter().all(|&item| item == 0))
 }
