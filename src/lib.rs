@@ -77,7 +77,7 @@ impl<T> Grid<T> {
 
     fn neighbor_indices(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         neighbor_offsets(2)
-            .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
+            .map(move |item| (x as isize + item[0], y as isize + item[1]))
             .filter(|&(x, y)| self.on_grid(x, y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
     }
@@ -87,10 +87,10 @@ impl<T> Grid<T> {
     }
 }
 
-fn neighbor_offsets(dimension: usize) -> impl Iterator<Item = (isize, isize)> {
+fn neighbor_offsets(dimension: usize) -> impl Iterator<Item = Vec<isize>> {
     (-1..1)
+        .map(|index| index as isize)
         .combinations_with_replacement(dimension)
-        .map(|items| (items[0] as isize, items[1] as isize))
         // skip zero offset
-        .filter(|&(x, y)| !(x == 0 && y == 0))
+        .filter(|items| !items.into_iter().all(|&item| item == 0))
 }
