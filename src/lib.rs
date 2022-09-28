@@ -100,7 +100,7 @@ impl<T> Grid<T> {
     ) -> impl Iterator<Item = (usize, usize, &mut T)> {
         let neigbors = self.neighbor_coordinates(x, y);
         self.enumerate_mut()
-            .filter(move |(x, y, _)| neigbors.iter().any(|(nx, ny)| *nx == *x && *ny == *y))
+            .filter(move |&(x, y, _)| neigbors.iter().any(|&(nx, ny)| nx == x && ny == y))
     }
 
     pub fn rows(&self) -> Vec<Vec<&T>> {
