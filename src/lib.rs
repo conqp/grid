@@ -103,20 +103,12 @@ impl<T> Grid<T> {
             .filter(move |&(x, y, _)| neigbors.iter().any(|&(nx, ny)| nx == x && ny == y))
     }
 
-    pub fn rows(&self) -> Vec<Vec<&T>> {
-        let mut rows = Vec::new();
-
-        for y in 0..self.height() {
-            let mut row = Vec::new();
-
-            for x in 0..self.width {
-                row.push(&self.items[self.coordinate_to_index(x, y)]);
-            }
-
-            rows.push(row);
-        }
-
-        rows
+    pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
+        (0..self.height()).map(|y| {
+            (0..self.width)
+                .map(|x| &self.items[self.coordinate_to_index(x, y)])
+                .collect::<Vec<&T>>()
+        })
     }
 
     fn neighbor_coordinates(&self, x: usize, y: usize) -> Vec<(usize, usize)> {
