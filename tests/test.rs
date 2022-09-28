@@ -28,7 +28,7 @@ fn storage() {
     let text = "Hello world!";
 
     for (index, item) in grid.iter_mut().enumerate() {
-        item.push(text.chars().nth(index).unwrap());
+        item.push(text.as_bytes()[index] as char);
     }
 
     assert_eq!(grid.get(0, 0).unwrap(), "H");
