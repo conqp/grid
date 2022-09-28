@@ -121,7 +121,7 @@ impl<T> Grid<T> {
             .into_iter()
             .cartesian_product(NEIGHBOR_OFFSETS)
             // skip zero offset
-            .filter(|&(x, y)| !(x == 0 && y == 0))
+            .filter(|&(dx, dy)| !(dx == 0 && dy == 0))
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
             .filter(move |&(x, y)| self.on_grid(x, y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
