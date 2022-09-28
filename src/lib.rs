@@ -90,7 +90,7 @@ impl<T> Grid<T> {
     pub fn neighbors(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize, &T)> {
         let neigbors = self.neighbor_coordinates(x, y);
         self.enumerate()
-            .filter(move |(x, y, _)| neigbors.iter().any(|(nx, ny)| *nx == *x && *ny == *y))
+            .filter(move |&(x, y, _)| neigbors.iter().any(|&(nx, ny)| nx == x && ny == y))
     }
 
     pub fn neighbors_mut(
