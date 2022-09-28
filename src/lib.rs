@@ -117,7 +117,11 @@ impl<T> Grid<T> {
         x: usize,
         y: usize,
     ) -> impl Iterator<Item = (usize, usize)> + '_ {
-        neighbor_offsets()
+        NEIGHBOR_OFFSETS
+            .into_iter()
+            .cartesian_product(NEIGHBOR_OFFSETS)
+            // skip zero offset
+            .filter(|&(x, y)| !(x == 0 && y == 0))
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
             .filter(move |&(x, y)| self.on_grid(x, y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
@@ -130,12 +134,4 @@ impl<T> Grid<T> {
     fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
         y * self.width + x
     }
-}
-
-fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
-    NEIGHBOR_OFFSETS
-        .into_iter()
-        .cartesian_product(NEIGHBOR_OFFSETS)
-        // skip zero offset
-        .filter(|&(x, y)| !(x == 0 && y == 0))
 }
