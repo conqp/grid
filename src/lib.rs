@@ -6,7 +6,7 @@ pub struct Grid<T> {
     items: Vec<T>,
 }
 
-const OFFSETS: [isize; 3] = [-1, 0, 1];
+const NEIGHBOR_OFFSETS: [isize; 3] = [-1, 0, 1];
 
 impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
@@ -129,9 +129,9 @@ impl<T> Grid<T> {
 }
 
 fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
-    OFFSETS
+    NEIGHBOR_OFFSETS
         .into_iter()
-        .cartesian_product(OFFSETS)
+        .cartesian_product(NEIGHBOR_OFFSETS)
         // skip zero offset
         .filter(|&(x, y)| !(x == 0 && y == 0))
 }
