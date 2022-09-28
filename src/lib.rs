@@ -12,7 +12,7 @@ impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
-            items: (0..height * width).map(|_| initializer()).collect(),
+            items: (0..height * width).map(|_| initializer()).collect_vec(),
         }
     }
 
@@ -31,7 +31,7 @@ impl<T> Grid<T> {
         iterator: impl Iterator<Item = T>,
         width: usize,
     ) -> Result<Self, &'static str> {
-        Self::from_vec(iterator.collect(), width)
+        Self::from_vec(iterator.collect_vec(), width)
     }
 
     pub fn width(&self) -> usize {
@@ -108,7 +108,7 @@ impl<T> Grid<T> {
         (0..self.height()).map(|y| {
             (0..self.width)
                 .map(|x| &self.items[self.coordinate_to_index(x, y)])
-                .collect::<Vec<&T>>()
+                .collect_vec()
         })
     }
 
