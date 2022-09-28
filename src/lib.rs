@@ -88,9 +88,10 @@ impl<T> Grid<T> {
     }
 
     pub fn neighbors(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize, &T)> {
-        let neigbors = self.neighbor_coordinates(x, y);
-        self.enumerate()
-            .filter(move |&(x, y, _)| neigbors.iter().any(|&(nx, ny)| nx == x && ny == y))
+        self.enumerate().filter(move |&(ix, iy, _)| {
+            self.neighbor_coordinates(x, y)
+                .any(|(nx, ny)| nx == ix && ny == iy)
+        })
     }
 
     pub fn neighbors_mut(
@@ -98,7 +99,7 @@ impl<T> Grid<T> {
         x: usize,
         y: usize,
     ) -> impl Iterator<Item = (usize, usize, &mut T)> {
-        let neigbors = self.neighbor_coordinates(x, y);
+        let neigbors = self.neighbor_coordinates(x, y).collect_vec();
         self.enumerate_mut()
             .filter(move |&(x, y, _)| neigbors.iter().any(|&(nx, ny)| nx == x && ny == y))
     }
@@ -111,12 +112,15 @@ impl<T> Grid<T> {
         })
     }
 
-    fn neighbor_coordinates(&self, x: usize, y: usize) -> Vec<(usize, usize)> {
+    fn neighbor_coordinates(
+        &self,
+        x: usize,
+        y: usize,
+    ) -> impl Iterator<Item = (usize, usize)> + '_ {
         neighbor_offsets()
             .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
             .filter(move |&(x, y)| self.on_grid(x, y))
             .map(|(dx, dy)| (dx as usize, dy as usize))
-            .collect()
     }
 
     fn on_grid(&self, x: isize, y: isize) -> bool {
