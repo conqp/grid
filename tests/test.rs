@@ -69,5 +69,16 @@ fn neighbors() {
         assert_eq!(neighbor, neighbors[y][x]);
     }
 
+    assert_eq!(grid.neighbors(0, 0).count(), 3);
+    assert_eq!(grid.neighbors(0, 1).count(), 5);
+    assert_eq!(grid.neighbors(0, 2).count(), 5);
+    assert_eq!(grid.neighbors(0, 3).count(), 3);
+    assert_eq!(grid.neighbors(1, 0).count(), 5);
     assert_eq!(grid.neighbors(1, 1).count(), 8);
+    assert_eq!(grid.neighbors(1, 2).count(), 8);
+    assert_eq!(grid.neighbors(1, 3).count(), 5);
+    assert_eq!(grid.neighbors(2, 0).count(), 3);
+    assert_eq!(grid.neighbors(2, 1).count(), 5);
+    assert_eq!(grid.neighbors(2, 2).count(), 5);
+    assert_eq!(grid.neighbors(2, 3).count(), 3);
 }
