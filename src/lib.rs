@@ -3,7 +3,6 @@ use itertools::Itertools;
 #[derive(Debug)]
 pub struct Grid<T> {
     width: usize,
-    height: usize,
     items: Vec<T>,
 }
 
@@ -13,7 +12,6 @@ impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
-            height,
             items: (0..height * width).map(|_| initializer()).collect(),
         }
     }
@@ -22,7 +20,6 @@ impl<T> Grid<T> {
         if vec.len() % width == 0 {
             Ok(Self {
                 width: width,
-                height: vec.len() / width,
                 items: vec,
             })
         } else {
@@ -42,11 +39,11 @@ impl<T> Grid<T> {
     }
 
     pub fn height(&self) -> usize {
-        self.height
+        self.items.len() / self.width
     }
 
     pub fn size(&self) -> usize {
-        self.width * self.height
+        self.width * self.height()
     }
 
     pub fn get(&self, x: usize, y: usize) -> Result<&T, &str> {
@@ -109,7 +106,7 @@ impl<T> Grid<T> {
     pub fn rows(&self) -> Vec<Vec<&T>> {
         let mut rows = Vec::new();
 
-        for y in 0..self.height {
+        for y in 0..self.height() {
             let mut row = Vec::new();
 
             for x in 0..self.width {
@@ -131,7 +128,7 @@ impl<T> Grid<T> {
     }
 
     fn on_grid(&self, x: isize, y: isize) -> bool {
-        0 <= x && x < self.width as isize && 0 <= y && y < self.height as isize
+        0 <= x && x < self.width as isize && 0 <= y && y < self.height() as isize
     }
 
     fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
