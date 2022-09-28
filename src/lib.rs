@@ -18,6 +18,25 @@ impl<T> Grid<T> {
         }
     }
 
+    pub fn from_vec(vec: Vec<T>, width: usize) -> Result<Self, &'static str> {
+        if vec.len() % width == 0 {
+            Ok(Self {
+                width: width,
+                height: vec.len() / width,
+                items: vec,
+            })
+        } else {
+            Err("iterator size must be a multiple of width")
+        }
+    }
+
+    pub fn from_iter(
+        iterator: impl Iterator<Item = T>,
+        width: usize,
+    ) -> Result<Self, &'static str> {
+        Self::from_vec(iterator.collect(), width)
+    }
+
     pub fn width(&self) -> usize {
         self.width
     }
