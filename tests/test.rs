@@ -68,4 +68,6 @@ fn neighbors() {
         println!("Neighbor: {}x{}: {}", x, y, neighbor);
         assert_eq!(neighbor, neighbors[y][x]);
     }
+
+    assert_eq!(grid.neighbors(1, 1).count(), 8);
 }

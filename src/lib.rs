@@ -7,6 +7,8 @@ pub struct Grid<T> {
     items: Vec<T>,
 }
 
+const OFFSETS: [isize; 3] = [-1, 0, 1];
+
 impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
@@ -80,7 +82,7 @@ impl<T> Grid<T> {
         x: usize,
         y: usize,
     ) -> impl Iterator<Item = (usize, usize, &mut T)> {
-        let neigbors: Vec<(usize, usize)> = self.neighbor_coordinates(x, y);
+        let neigbors = self.neighbor_coordinates(x, y);
         self.enumerate_mut()
             .filter(move |(x, y, _)| neigbors.iter().any(|(nx, ny)| *nx == *x && *ny == *y))
     }
@@ -119,10 +121,9 @@ impl<T> Grid<T> {
 }
 
 fn neighbor_offsets() -> impl Iterator<Item = (isize, isize)> {
-    (-1..1)
-        .map(|index| index as isize)
-        .combinations_with_replacement(2)
+    OFFSETS
+        .into_iter()
+        .cartesian_product(OFFSETS)
         // skip zero offset
-        .filter(|items| !items.iter().all(|&item| item == 0))
-        .map(|items| (items[0], items[1]))
+        .filter(|&(x, y)| !(x == 0 && y == 0))
 }
