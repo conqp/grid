@@ -9,8 +9,6 @@ pub struct Grid<T> {
     items: Vec<T>,
 }
 
-const NEIGHBOR_OFFSETS: [isize; 3] = [-1, 0, 1];
-
 impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
@@ -87,7 +85,7 @@ impl<T> Grid<T> {
     pub fn neighbors(&self, coordinate: &Coordinate) -> impl Iterator<Item = (Coordinate, &T)> {
         let neighbors = self.neighbor_coordinates(coordinate);
         self.enumerate()
-            .filter(move |(other, _)| neighbors.iter().any(|neighbor| neighbor == other))
+            .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
 
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
@@ -98,23 +96,15 @@ impl<T> Grid<T> {
         })
     }
 
-    pub fn contains(&self, coordinate: &Coordinate) -> bool {
-        coordinate.x() < self.width && coordinate.y() < self.height()
+    pub fn neighbor_coordinates(&self, coordinate: &Coordinate) -> Vec<Coordinate> {
+        coordinate
+            .neighbors()
+            .into_iter()
+            .filter(|coordinate| self.contains(coordinate))
+            .collect_vec()
     }
 
-    fn neighbor_coordinates(&self, coordinate: &Coordinate) -> Vec<Coordinate> {
-        NEIGHBOR_OFFSETS
-            .into_iter()
-            .cartesian_product(NEIGHBOR_OFFSETS)
-            // skip zero offset
-            .filter(|&(dx, dy)| !(dx == 0 && dy == 0))
-            .map(move |(dx, dy)| {
-                Coordinate::new(
-                    (coordinate.x() as isize + dx) as usize,
-                    (coordinate.y() as isize + dy) as usize,
-                )
-            })
-            .filter(move |coordinate| self.contains(coordinate))
-            .collect_vec()
+    pub fn contains(&self, coordinate: &Coordinate) -> bool {
+        coordinate.x() < self.width && coordinate.y() < self.height()
     }
 }

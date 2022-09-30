@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 mod errors;
 pub use errors::CoordinateParseError;
 
@@ -6,6 +8,18 @@ pub struct Coordinate {
     x: usize,
     y: usize,
 }
+
+const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
+    (-1, -1),
+    (0, -1),
+    (1, -1),
+    (-1, 0),
+    // skip zero offset, which is the original coordinate
+    (1, 0),
+    (-1, 1),
+    (0, 1),
+    (1, 1),
+];
 
 impl Coordinate {
     pub fn new(x: usize, y: usize) -> Self {
@@ -38,6 +52,15 @@ impl Coordinate {
 
     pub fn to_index(&self, width: usize) -> usize {
         self.y * width + self.x
+    }
+
+    pub fn neighbors(&self) -> Vec<Coordinate> {
+        NEIGHBOR_OFFSETS
+            .iter()
+            .map(|(dx, dy)| (self.x as isize + dx, self.y as isize + dy))
+            .filter(|&(x, y)| 0 <= x && 0 <= y)
+            .map(|(x, y)| Self::new(x as usize, y as usize))
+            .collect_vec()
     }
 }
 
