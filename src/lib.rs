@@ -23,7 +23,7 @@ impl<T> Grid<T> {
                 items: vec,
             })
         } else {
-            Err("iterator size must be a multiple of width")
+            Err("vec size must be a multiple of width")
         }
     }
 
