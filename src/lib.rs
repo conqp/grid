@@ -88,6 +88,15 @@ impl<T> Grid<T> {
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
 
+    pub fn neighbors_mut(
+        &mut self,
+        coordinate: &Coordinate,
+    ) -> impl Iterator<Item = (Coordinate, &mut T)> {
+        let neighbors = self.neighbor_coordinates(coordinate);
+        self.enumerate_mut()
+            .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
+    }
+
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
         (0..self.height()).map(|y| {
             (0..self.width)
