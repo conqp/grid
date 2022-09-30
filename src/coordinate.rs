@@ -55,3 +55,9 @@ impl std::fmt::Display for Coordinate {
         write!(f, "{}x{}", self.x, self.y)
     }
 }
+
+impl std::convert::From<(usize, usize)> for Coordinate {
+    fn from((x, y): (usize, usize)) -> Self {
+        Self { x, y }
+    }
+}

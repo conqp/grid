@@ -83,3 +83,9 @@ fn neighbors() {
     assert_eq!(grid.neighbors(&Coordinate::new(2, 2)).count(), 5);
     assert_eq!(grid.neighbors(&Coordinate::new(2, 3)).count(), 3);
 }
+
+#[test]
+fn coordinate_from_tuple() {
+    let coordinate: Coordinate = (32, 1337).into();
+    assert_eq!(Coordinate::new(32, 1337), coordinate);
+}
