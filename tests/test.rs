@@ -1,3 +1,4 @@
+use grid::Coordinate;
 use grid::Grid;
 
 #[test]
@@ -31,18 +32,18 @@ fn storage() {
         item.push(text.as_bytes()[index] as char);
     }
 
-    assert_eq!(grid.get(0, 0).unwrap(), "H");
-    assert_eq!(grid.get(1, 0).unwrap(), "e");
-    assert_eq!(grid.get(2, 0).unwrap(), "l");
-    assert_eq!(grid.get(0, 1).unwrap(), "l");
-    assert_eq!(grid.get(1, 1).unwrap(), "o");
-    assert_eq!(grid.get(2, 1).unwrap(), " ");
-    assert_eq!(grid.get(0, 2).unwrap(), "w");
-    assert_eq!(grid.get(1, 2).unwrap(), "o");
-    assert_eq!(grid.get(2, 2).unwrap(), "r");
-    assert_eq!(grid.get(0, 3).unwrap(), "l");
-    assert_eq!(grid.get(1, 3).unwrap(), "d");
-    assert_eq!(grid.get(2, 3).unwrap(), "!");
+    assert_eq!(grid.get(&Coordinate::new(0, 0)).unwrap(), "H");
+    assert_eq!(grid.get(&Coordinate::new(1, 0)).unwrap(), "e");
+    assert_eq!(grid.get(&Coordinate::new(2, 0)).unwrap(), "l");
+    assert_eq!(grid.get(&Coordinate::new(0, 1)).unwrap(), "l");
+    assert_eq!(grid.get(&Coordinate::new(1, 1)).unwrap(), "o");
+    assert_eq!(grid.get(&Coordinate::new(2, 1)).unwrap(), " ");
+    assert_eq!(grid.get(&Coordinate::new(0, 2)).unwrap(), "w");
+    assert_eq!(grid.get(&Coordinate::new(1, 2)).unwrap(), "o");
+    assert_eq!(grid.get(&Coordinate::new(2, 2)).unwrap(), "r");
+    assert_eq!(grid.get(&Coordinate::new(0, 3)).unwrap(), "l");
+    assert_eq!(grid.get(&Coordinate::new(1, 3)).unwrap(), "d");
+    assert_eq!(grid.get(&Coordinate::new(2, 3)).unwrap(), "!");
 }
 
 #[test]
@@ -60,25 +61,25 @@ fn neighbors() {
         item.push(text.chars().nth(index).unwrap());
     }
 
-    for (x, y, item) in grid.enumerate() {
-        println!("Item at {}x{}: {}", x, y, item);
+    for (coordinate, item) in grid.enumerate() {
+        println!("Item at {}: {}", coordinate, item);
     }
 
-    for (x, y, neighbor) in grid.neighbors(1, 1) {
-        println!("Neighbor: {}x{}: {}", x, y, neighbor);
-        assert_eq!(neighbor, neighbors[y][x]);
+    for (coordinate, neighbor) in grid.neighbors(&Coordinate::new(1, 1)) {
+        println!("Neighbor: {}: {}", coordinate, neighbor);
+        assert_eq!(neighbor, neighbors[coordinate.y()][coordinate.x()]);
     }
 
-    assert_eq!(grid.neighbors(0, 0).count(), 3);
-    assert_eq!(grid.neighbors(0, 1).count(), 5);
-    assert_eq!(grid.neighbors(0, 2).count(), 5);
-    assert_eq!(grid.neighbors(0, 3).count(), 3);
-    assert_eq!(grid.neighbors(1, 0).count(), 5);
-    assert_eq!(grid.neighbors(1, 1).count(), 8);
-    assert_eq!(grid.neighbors(1, 2).count(), 8);
-    assert_eq!(grid.neighbors(1, 3).count(), 5);
-    assert_eq!(grid.neighbors(2, 0).count(), 3);
-    assert_eq!(grid.neighbors(2, 1).count(), 5);
-    assert_eq!(grid.neighbors(2, 2).count(), 5);
-    assert_eq!(grid.neighbors(2, 3).count(), 3);
+    assert_eq!(grid.neighbors(&Coordinate::new(0, 0)).count(), 3);
+    assert_eq!(grid.neighbors(&Coordinate::new(0, 1)).count(), 5);
+    assert_eq!(grid.neighbors(&Coordinate::new(0, 2)).count(), 5);
+    assert_eq!(grid.neighbors(&Coordinate::new(0, 3)).count(), 3);
+    assert_eq!(grid.neighbors(&Coordinate::new(1, 0)).count(), 5);
+    assert_eq!(grid.neighbors(&Coordinate::new(1, 1)).count(), 8);
+    assert_eq!(grid.neighbors(&Coordinate::new(1, 2)).count(), 8);
+    assert_eq!(grid.neighbors(&Coordinate::new(1, 3)).count(), 5);
+    assert_eq!(grid.neighbors(&Coordinate::new(2, 0)).count(), 3);
+    assert_eq!(grid.neighbors(&Coordinate::new(2, 1)).count(), 5);
+    assert_eq!(grid.neighbors(&Coordinate::new(2, 2)).count(), 5);
+    assert_eq!(grid.neighbors(&Coordinate::new(2, 3)).count(), 3);
 }

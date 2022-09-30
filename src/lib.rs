@@ -1,5 +1,8 @@
 use itertools::Itertools;
 
+mod coordinate;
+pub use coordinate::Coordinate;
+
 #[derive(Debug)]
 pub struct Grid<T> {
     width: usize,
@@ -43,18 +46,17 @@ impl<T> Grid<T> {
         self.width * self.height()
     }
 
-    pub fn get(&self, x: usize, y: usize) -> Result<&T, &str> {
-        if self.on_grid(x as isize, y as isize) {
-            Ok(&self.items[self.coordinate_to_index(x, y)])
+    pub fn get(&self, coordinate: &Coordinate) -> Result<&T, &str> {
+        if self.contains(coordinate) {
+            Ok(&self.items[coordinate.to_index(self.width)])
         } else {
             Err("coordinate not on grid")
         }
     }
 
-    pub fn get_mut(&mut self, x: usize, y: usize) -> Result<&mut T, &str> {
-        if self.on_grid(x as isize, y as isize) {
-            let index = self.coordinate_to_index(x, y);
-            Ok(&mut self.items[index])
+    pub fn get_mut(&mut self, coordinate: &Coordinate) -> Result<&mut T, &str> {
+        if self.contains(coordinate) {
+            Ok(&mut self.items[coordinate.to_index(self.width)])
         } else {
             Err("coordinate not on grid")
         }
@@ -68,67 +70,63 @@ impl<T> Grid<T> {
         self.items.iter_mut()
     }
 
-    pub fn enumerate(&self) -> impl Iterator<Item = (usize, usize, &T)> {
+    pub fn enumerate(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         self.items.iter().enumerate().map(|(index, item)| {
             let x = index % self.width;
             let y = (index - x) / self.width;
-            (x, y, item)
+            (Coordinate::new(x, y), item)
         })
     }
 
-    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (usize, usize, &mut T)> {
+    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (Coordinate, &mut T)> {
         self.items.iter_mut().enumerate().map(|(index, item)| {
             let x = index % self.width;
             let y = (index - x) / self.width;
-            (x, y, item)
+            (Coordinate::new(x, y), item)
         })
     }
 
-    pub fn neighbors(&self, x: usize, y: usize) -> impl Iterator<Item = (usize, usize, &T)> {
-        self.enumerate().filter(move |&(ix, iy, _)| {
-            self.neighbor_coordinates(x, y)
-                .any(|(nx, ny)| nx == ix && ny == iy)
-        })
+    pub fn neighbors(&self, coordinate: &Coordinate) -> impl Iterator<Item = (Coordinate, &T)> {
+        let neighbors = self.neighbor_coordinates(coordinate);
+        self.enumerate()
+            .filter(move |(other, _)| neighbors.iter().any(|neighbor| neighbor == other))
     }
 
     pub fn neighbors_mut(
         &mut self,
-        x: usize,
-        y: usize,
-    ) -> impl Iterator<Item = (usize, usize, &mut T)> {
-        let neigbors = self.neighbor_coordinates(x, y).collect_vec();
+        coordinate: &Coordinate,
+    ) -> impl Iterator<Item = (Coordinate, &mut T)> {
+        let neigbors = self.neighbor_coordinates(coordinate);
         self.enumerate_mut()
-            .filter(move |&(x, y, _)| neigbors.iter().any(|&(nx, ny)| nx == x && ny == y))
+            .filter(move |(coordinate, _)| neigbors.iter().any(|neigbor| neigbor == coordinate))
     }
 
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
         (0..self.height()).map(|y| {
             (0..self.width)
-                .map(|x| &self.items[self.coordinate_to_index(x, y)])
+                .map(|x| &self.items[Coordinate::new(x, y).to_index(self.width)])
                 .collect_vec()
         })
     }
 
-    fn neighbor_coordinates(
-        &self,
-        x: usize,
-        y: usize,
-    ) -> impl Iterator<Item = (usize, usize)> + '_ {
+    fn neighbor_coordinates(&self, coordinate: &Coordinate) -> Vec<Coordinate> {
         NEIGHBOR_OFFSETS
             .into_iter()
             .cartesian_product(NEIGHBOR_OFFSETS)
             // skip zero offset
+            .into_iter()
             .filter(|&(dx, dy)| !(dx == 0 && dy == 0))
-            .map(move |(dx, dy)| (x as isize + dx, y as isize + dy))
-            .filter(move |&(x, y)| self.on_grid(x, y))
-            .map(|(dx, dy)| (dx as usize, dy as usize))
+            .map(move |(dx, dy)| {
+                Coordinate::new(
+                    (coordinate.x() as isize + dx) as usize,
+                    (coordinate.y() as isize + dy) as usize,
+                )
+            })
+            .filter(move |coordinate| self.contains(coordinate))
+            .collect_vec()
     }
 
-    fn on_grid(&self, x: isize, y: isize) -> bool {
-        0 <= x && x < self.width as isize && 0 <= y && y < self.height() as isize
-    }
-
-    fn coordinate_to_index(&self, x: usize, y: usize) -> usize {
-        y * self.width + x
+    fn contains(&self, coordinate: &Coordinate) -> bool {
+        coordinate.x() < self.width && coordinate.y() < self.height()
     }
 }
