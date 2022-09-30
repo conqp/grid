@@ -4,7 +4,6 @@ mod coordinate;
 pub use coordinate::Coordinate;
 pub use coordinate::CoordinateParseError;
 
-#[derive(Debug)]
 pub struct Grid<T> {
     width: usize,
     items: Vec<T>,
@@ -72,11 +71,17 @@ impl<T> Grid<T> {
     }
 
     pub fn enumerate(&self) -> impl Iterator<Item = (Coordinate, &T)> {
-        self.items.iter().enumerate().map(|(index, item)| {
-            let x = index % self.width;
-            let y = (index - x) / self.width;
-            (Coordinate::new(x, y), item)
-        })
+        self.items
+            .iter()
+            .enumerate()
+            .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
+    }
+
+    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (Coordinate, &mut T)> {
+        self.items
+            .iter_mut()
+            .enumerate()
+            .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
     }
 
     pub fn neighbors(&self, coordinate: &Coordinate) -> impl Iterator<Item = (Coordinate, &T)> {
