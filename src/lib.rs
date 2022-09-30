@@ -79,27 +79,10 @@ impl<T> Grid<T> {
         })
     }
 
-    pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (Coordinate, &mut T)> {
-        self.items.iter_mut().enumerate().map(|(index, item)| {
-            let x = index % self.width;
-            let y = (index - x) / self.width;
-            (Coordinate::new(x, y), item)
-        })
-    }
-
     pub fn neighbors(&self, coordinate: &Coordinate) -> impl Iterator<Item = (Coordinate, &T)> {
         let neighbors = self.neighbor_coordinates(coordinate);
         self.enumerate()
             .filter(move |(other, _)| neighbors.iter().any(|neighbor| neighbor == other))
-    }
-
-    pub fn neighbors_mut(
-        &mut self,
-        coordinate: &Coordinate,
-    ) -> impl Iterator<Item = (Coordinate, &mut T)> {
-        let neigbors = self.neighbor_coordinates(coordinate);
-        self.enumerate_mut()
-            .filter(move |(coordinate, _)| neigbors.iter().any(|neigbor| neigbor == coordinate))
     }
 
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
@@ -119,7 +102,6 @@ impl<T> Grid<T> {
             .into_iter()
             .cartesian_product(NEIGHBOR_OFFSETS)
             // skip zero offset
-            .into_iter()
             .filter(|&(dx, dy)| !(dx == 0 && dy == 0))
             .map(move |(dx, dy)| {
                 Coordinate::new(
