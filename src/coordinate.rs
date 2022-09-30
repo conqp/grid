@@ -58,6 +58,24 @@ impl std::fmt::Display for Coordinate {
 
 impl std::convert::From<(usize, usize)> for Coordinate {
     fn from((x, y): (usize, usize)) -> Self {
-        Self { x, y }
+        Self::new(x, y)
+    }
+}
+
+impl std::convert::From<&(usize, usize)> for Coordinate {
+    fn from((x, y): &(usize, usize)) -> Self {
+        Self::new(*x, *y)
+    }
+}
+
+impl std::convert::From<Coordinate> for (usize, usize) {
+    fn from(coordinate: Coordinate) -> Self {
+        (coordinate.x, coordinate.y)
+    }
+}
+
+impl std::convert::From<&Coordinate> for (usize, usize) {
+    fn from(coordinate: &Coordinate) -> Self {
+        (coordinate.x, coordinate.y)
     }
 }
