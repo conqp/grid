@@ -1,9 +1,5 @@
-#[derive(Debug)]
-pub enum CoordinateParseError {
-    NotTwoNumbers,
-    InvalidXValue,
-    InvalidYValue,
-}
+mod errors;
+pub use errors::CoordinateParseError;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Coordinate {
