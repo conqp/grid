@@ -109,6 +109,10 @@ impl<T> Grid<T> {
         })
     }
 
+    pub fn contains(&self, coordinate: &Coordinate) -> bool {
+        coordinate.x() < self.width && coordinate.y() < self.height()
+    }
+
     fn neighbor_coordinates(&self, coordinate: &Coordinate) -> Vec<Coordinate> {
         NEIGHBOR_OFFSETS
             .into_iter()
@@ -124,9 +128,5 @@ impl<T> Grid<T> {
             })
             .filter(move |coordinate| self.contains(coordinate))
             .collect_vec()
-    }
-
-    fn contains(&self, coordinate: &Coordinate) -> bool {
-        coordinate.x() < self.width && coordinate.y() < self.height()
     }
 }
