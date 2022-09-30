@@ -2,6 +2,7 @@ use itertools::Itertools;
 
 mod coordinate;
 pub use coordinate::Coordinate;
+pub use coordinate::CoordinateParseError;
 
 #[derive(Debug)]
 pub struct Grid<T> {
