@@ -14,3 +14,9 @@ impl CoordinateParseError {
         }
     }
 }
+
+impl std::fmt::Display for CoordinateParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_string())
+    }
+}
