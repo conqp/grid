@@ -12,6 +12,14 @@ impl Coordinate {
         Self { x, y }
     }
 
+    pub fn from_index(width: usize) -> impl Fn(usize) -> Self {
+        move |index| {
+            let x = index % width;
+            let y = (index - x) / width;
+            Self::new(x, y)
+        }
+    }
+
     pub fn from_str_pair((x, y): (&str, &str)) -> Result<Self, CoordinateParseError> {
         match x.parse::<usize>() {
             Ok(x) => match y.parse::<usize>() {
