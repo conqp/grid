@@ -12,7 +12,7 @@ impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
-            items: (0..height * width).map(|_| initializer()).collect_vec(),
+            items: (0..width * height).map(|_| initializer()).collect_vec(),
         }
     }
 
