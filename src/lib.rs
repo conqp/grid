@@ -45,20 +45,12 @@ impl<T> Grid<T> {
         self.width * self.height()
     }
 
-    pub fn get(&self, coordinate: &Coordinate) -> Result<&T, &str> {
-        if self.contains(coordinate) {
-            Ok(&self.items[coordinate.to_index(self.width)])
-        } else {
-            Err("coordinate not on grid")
-        }
+    pub fn get(&self, coordinate: &Coordinate) -> Option<&T> {
+        self.items.get(coordinate.to_index(self.width))
     }
 
-    pub fn get_mut(&mut self, coordinate: &Coordinate) -> Result<&mut T, &str> {
-        if self.contains(coordinate) {
-            Ok(&mut self.items[coordinate.to_index(self.width)])
-        } else {
-            Err("coordinate not on grid")
-        }
+    pub fn get_mut(&mut self, coordinate: &Coordinate) -> Option<&mut T> {
+        self.items.get_mut(coordinate.to_index(self.width))
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &T> {
