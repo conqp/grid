@@ -19,7 +19,9 @@ impl<T> Grid<T> {
     }
 
     pub fn from_vec(vec: Vec<T>, width: usize) -> Result<Self, &'static str> {
-        if vec.len() % width == 0 {
+        if width == 0 {
+            Err("width must not be zero")
+        } else if vec.len() % width == 0 {
             Ok(Self { width, items: vec })
         } else {
             Err("vec size must be a multiple of width")
