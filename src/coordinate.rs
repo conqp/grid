@@ -75,6 +75,12 @@ impl std::str::FromStr for Coordinate {
     }
 }
 
+impl AsRef<Coordinate> for Coordinate {
+    fn as_ref(&self) -> &Coordinate {
+        self
+    }
+}
+
 impl std::fmt::Display for Coordinate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}x{}", self.x, self.y)
