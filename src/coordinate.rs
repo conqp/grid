@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 mod errors;
 pub use errors::CoordinateParseError;
 
@@ -60,7 +58,7 @@ impl Coordinate {
             .map(|(dx, dy)| (self.x as isize + dx, self.y as isize + dy))
             .filter(|&(x, y)| 0 <= x && 0 <= y)
             .map(|(x, y)| Self::new(x as usize, y as usize))
-            .collect_vec()
+            .collect()
     }
 }
 

@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 mod coordinate;
 pub use coordinate::Coordinate;
 pub use coordinate::CoordinateParseError;
@@ -14,7 +12,7 @@ impl<T> Grid<T> {
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
-            items: (0..width * height).map(|_| initializer()).collect_vec(),
+            items: (0..width * height).map(|_| initializer()).collect(),
         }
     }
 
@@ -32,7 +30,7 @@ impl<T> Grid<T> {
         iterator: impl Iterator<Item = T>,
         width: usize,
     ) -> Result<Self, &'static str> {
-        Self::from_vec(iterator.collect_vec(), width)
+        Self::from_vec(iterator.collect(), width)
     }
 
     pub fn width(&self) -> usize {
@@ -99,7 +97,7 @@ impl<T> Grid<T> {
         (0..self.height()).map(|y| {
             (0..self.width)
                 .map(|x| &self.items[Coordinate::new(x, y).to_index(self.width)])
-                .collect_vec()
+                .collect()
         })
     }
 
@@ -109,7 +107,7 @@ impl<T> Grid<T> {
             .neighbors()
             .into_iter()
             .filter(|coordinate| self.contains(*coordinate))
-            .collect_vec()
+            .collect()
     }
 
     pub fn contains(&self, coordinate: impl Into<Coordinate>) -> bool {
