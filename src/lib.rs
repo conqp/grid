@@ -45,12 +45,12 @@ impl<T> Grid<T> {
         self.width * self.height()
     }
 
-    pub fn get(&self, coordinate: &Coordinate) -> Option<&T> {
-        self.items.get(coordinate.to_index(self.width))
+    pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
+        self.items.get(coordinate.into().to_index(self.width))
     }
 
-    pub fn get_mut(&mut self, coordinate: &Coordinate) -> Option<&mut T> {
-        self.items.get_mut(coordinate.to_index(self.width))
+    pub fn get_mut(&mut self, coordinate: impl Into<Coordinate>) -> Option<&mut T> {
+        self.items.get_mut(coordinate.into().to_index(self.width))
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &T> {
@@ -75,7 +75,10 @@ impl<T> Grid<T> {
             .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
     }
 
-    pub fn neighbors(&self, coordinate: &Coordinate) -> impl Iterator<Item = (Coordinate, &T)> {
+    pub fn neighbors(
+        &self,
+        coordinate: impl Into<Coordinate>,
+    ) -> impl Iterator<Item = (Coordinate, &T)> {
         let neighbors = self.neighbor_coordinates(coordinate);
         self.enumerate()
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
@@ -83,7 +86,7 @@ impl<T> Grid<T> {
 
     pub fn neighbors_mut(
         &mut self,
-        coordinate: &Coordinate,
+        coordinate: impl Into<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &mut T)> {
         let neighbors = self.neighbor_coordinates(coordinate);
         self.enumerate_mut()
@@ -98,15 +101,17 @@ impl<T> Grid<T> {
         })
     }
 
-    pub fn neighbor_coordinates(&self, coordinate: &Coordinate) -> Vec<Coordinate> {
+    pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
         coordinate
+            .into()
             .neighbors()
             .into_iter()
-            .filter(|coordinate| self.contains(coordinate))
+            .filter(|coordinate| self.contains(*coordinate))
             .collect_vec()
     }
 
-    pub fn contains(&self, coordinate: &Coordinate) -> bool {
+    pub fn contains(&self, coordinate: impl Into<Coordinate>) -> bool {
+        let coordinate = coordinate.into();
         coordinate.x() < self.width && coordinate.y() < self.height()
     }
 }
