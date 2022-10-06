@@ -61,12 +61,7 @@ fn neighbors() {
         item.push(text.chars().nth(index).unwrap());
     }
 
-    for (coordinate, item) in grid.enumerate() {
-        println!("Item at {}: {}", coordinate, item);
-    }
-
     for (coordinate, neighbor) in grid.neighbors(Coordinate::new(1, 1)) {
-        println!("Neighbor: {}: {}", coordinate, neighbor);
         assert_eq!(neighbor, neighbors[coordinate.y()][coordinate.x()]);
     }
 
