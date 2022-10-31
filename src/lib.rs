@@ -2,6 +2,7 @@ mod coordinate;
 pub use coordinate::Coordinate;
 pub use coordinate::CoordinateParseError;
 
+/// A two-dimensional grid of arbitrary cell content
 #[derive(Debug)]
 pub struct Grid<T> {
     width: usize,
@@ -9,6 +10,14 @@ pub struct Grid<T> {
 }
 
 impl<T> Grid<T> {
+    /// Returns a new instance of Grid
+    ///
+    /// # Arguments
+    ///
+    /// * `width` - The width of the grid
+    /// * `height` - The height of the grid
+    /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
+    ///
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
@@ -16,6 +25,15 @@ impl<T> Grid<T> {
         }
     }
 
+    /// Returns a new instance of Grid from a given Vec if successful or an error
+    ///
+    /// # Arguments
+    ///
+    /// * `vec` - The Vec to create the grid from
+    /// * `width` - The width of the grid
+    ///
+    /// `vec.len()` must be divisible by `width`
+    ///
     pub fn from_vec(vec: Vec<T>, width: usize) -> Result<Self, &'static str> {
         if width == 0 {
             Err("width must not be zero")
@@ -26,6 +44,15 @@ impl<T> Grid<T> {
         }
     }
 
+    /// Returns a new instance of Grid from a given iterator if successful or an error
+    ///
+    /// # Arguments
+    ///
+    /// * `iterator` - The iterator to create the grid from
+    /// * `width` - The width of the grid
+    ///
+    /// The amount of items in `iterator` must be divisible by `width`
+    ///
     pub fn from_iter(
         iterator: impl Iterator<Item = T>,
         width: usize,
@@ -33,6 +60,14 @@ impl<T> Grid<T> {
         Self::from_vec(iterator.collect(), width)
     }
 
+    /// Returns a new instance of Grid from a given slice if successful or an error
+    ///
+    /// # Arguments
+    ///
+    /// * `slice` - The slice to create the grid from
+    /// * `width` - The width of the grid
+    ///
+    /// The amount of items in `slice` must be divisible by `width`
     pub fn from_slice(slice: &[T], width: usize) -> Result<Self, &'static str>
     where
         T: Clone,
@@ -40,22 +75,39 @@ impl<T> Grid<T> {
         Self::from_vec(Vec::from(slice), width)
     }
 
+    /// Returns the width of the grid
     pub fn width(&self) -> usize {
         self.width
     }
 
+    /// Returns the height of the grid
     pub fn height(&self) -> usize {
         self.items.len() / self.width
     }
 
+    /// Returns the size of the grid
+    ///
+    /// This is equal to `grid.width() * grid.height()`
     pub fn size(&self) -> usize {
         self.width * self.height()
     }
 
+    /// Returns an Option to a reference of the cell content at the given coordinate
+    ///
+    /// # Arguments
+    ///
+    /// * `coordinate` - The coordinate of the cell
+    ///
     pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
         self.items.get(coordinate.into().to_index(self.width))
     }
 
+    /// Returns an Option to a mutable reference of the cell content at the given coordinate
+    ///
+    /// # Arguments
+    ///
+    /// * `coordinate` - The coordinate of the cell
+    ///
     pub fn get_mut(&mut self, coordinate: impl Into<Coordinate>) -> Option<&mut T> {
         self.items.get_mut(coordinate.into().to_index(self.width))
     }
