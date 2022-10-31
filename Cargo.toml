@@ -8,6 +8,6 @@ repository = "https://github.com/conqp/grid/"
 readme = "README.md"
 documentation = "https://docs.rs/grid2d"
 keywords = [ "2D", "array", "matrix", "data-structure"]
-categories = ["data-structures", ]
+categories = ["data-structures"]
 version = "0.2.1"
 edition = "2021"
