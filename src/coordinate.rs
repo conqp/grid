@@ -19,17 +19,38 @@ const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
     (1, 1),
 ];
 
+/// Coordinate of a cell on a two-dimensional grid
 impl Coordinate {
+    /// Creates a new coordinate
+    ///
+    /// # Arguments
+    ///
+    /// * `x` - The x component
+    /// * `y` - The y component
+    ///
     pub fn new(x: usize, y: usize) -> Self {
         Self { x, y }
     }
 
+    /// Creates a coordinate from a grid's width and a total index
+    ///
+    /// # Arguments
+    ///
+    /// * `width` - The grid's width
+    /// * `index` - The index of the cell
+    ///
     pub fn from_width_and_index(width: usize, index: usize) -> Self {
         let x = index % width;
         let y = (index - x) / width;
         Self::new(x, y)
     }
 
+    /// Creates a coordinate from a tuple of two string slices on success or returns an error code
+    ///
+    /// # Arguments
+    ///
+    /// * `(x, y)` - Tuple of the x and y component as string slices
+    ///
     pub fn from_str_pair((x, y): (&str, &str)) -> Result<Self, CoordinateParseError> {
         match x.parse::<usize>() {
             Ok(x) => match y.parse::<usize>() {
@@ -40,18 +61,26 @@ impl Coordinate {
         }
     }
 
+    /// Returns the x component
     pub fn x(&self) -> usize {
         self.x
     }
 
+    /// Returns the y component
     pub fn y(&self) -> usize {
         self.y
     }
 
+    /// Converts the coordinate into a linear index
+    ///
+    /// # Arguments
+    /// * `width` - The width of the grid
+    ///
     pub fn to_index(&self, width: usize) -> usize {
         self.y * width + self.x
     }
 
+    /// Returns all potential neighboring coordinates
     pub fn neighbors(&self) -> Vec<Coordinate> {
         NEIGHBOR_OFFSETS
             .iter()
