@@ -80,7 +80,11 @@ impl<T> Grid<T> {
 
     /// Returns the height of the grid
     pub fn height(&self) -> usize {
-        self.items.len() / self.width
+        if self.width == 0 {
+            0
+        } else {
+            self.items.len() / self.width
+        }
     }
 
     /// Returns the size of the grid
