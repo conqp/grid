@@ -1,6 +1,7 @@
 [package]
 name = "grid2d"
 description = "Two dimensional grid of runtime-defined, but unchangable size"
+license-file = "LICENSE"
 version = "0.2.0"
 edition = "2021"
 
