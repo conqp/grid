@@ -33,6 +33,13 @@ impl<T> Grid<T> {
         Self::from_vec(iterator.collect(), width)
     }
 
+    pub fn from_slice(slice: &[T], width: usize) -> Result<Self, &'static str>
+    where
+        T: Clone,
+    {
+        Self::from_vec(Vec::from(slice), width)
+    }
+
     pub fn width(&self) -> usize {
         self.width
     }
