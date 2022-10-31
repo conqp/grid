@@ -112,14 +112,21 @@ impl<T> Grid<T> {
         self.items.get_mut(coordinate.into().to_index(self.width))
     }
 
+    /// Yields references to the grid's items
+    ///
+    /// Iterates over columns, then rows
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
 
+    /// Yields mutable references to the grid's items
+    ///
+    /// Iterates over columns, then rows
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
         self.items.iter_mut()
     }
 
+    /// Yields tuples of Coordinate and reference to the grid's items
     pub fn enumerate(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         self.items
             .iter()
@@ -127,6 +134,7 @@ impl<T> Grid<T> {
             .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
     }
 
+    /// Yields tuples of Coordinate and mutable reference to the grid's items
     pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (Coordinate, &mut T)> {
         self.items
             .iter_mut()
@@ -134,6 +142,12 @@ impl<T> Grid<T> {
             .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
     }
 
+    /// Yields tuples of Coordinate and reference to the grid's items that are neighbors of the given coordinate
+    ///
+    /// # Arguments
+    ///
+    /// * `coordinate` - The coordinate who's neighbors shall be yielded
+    ///
     pub fn neighbors(
         &self,
         coordinate: impl Into<Coordinate>,
@@ -143,6 +157,12 @@ impl<T> Grid<T> {
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
 
+    /// Yields tuples of Coordinate and mutable reference to the grid's items that are neighbors of the given coordinate
+    ///
+    /// # Arguments
+    ///
+    /// * `coordinate` - The coordinate whose neighbors shall be yielded
+    ///
     pub fn neighbors_mut(
         &mut self,
         coordinate: impl Into<Coordinate>,
@@ -152,6 +172,7 @@ impl<T> Grid<T> {
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
 
+    /// Yields the rows of the grid
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
         (0..self.height()).map(|y| {
             (0..self.width)
@@ -160,6 +181,12 @@ impl<T> Grid<T> {
         })
     }
 
+    /// Returns the coordinates that are neighbors of the given coordinate
+    ///
+    /// # Arguments
+    ///
+    /// * `coordinate` - The coordinate whose neighbors shall be yielded
+    ///
     pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
         coordinate
             .into()
@@ -169,6 +196,12 @@ impl<T> Grid<T> {
             .collect()
     }
 
+    /// Determines whether the given coordinate is on the grid
+    ///
+    /// # Arguments
+    ///
+    /// * `coordinate` - The coordinate who's to be tested
+    ///
     pub fn contains(&self, coordinate: impl Into<Coordinate>) -> bool {
         let coordinate = coordinate.into();
         coordinate.x() < self.width && coordinate.y() < self.height()
