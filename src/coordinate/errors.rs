@@ -1,3 +1,4 @@
+/// Indicates errors while parsing a coordinate
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum CoordinateParseError {
     NotTwoNumbers,
