@@ -2,6 +2,7 @@
 name = "grid2d"
 description = "Two dimensional grid of runtime-defined, but unchangable size"
 license-file = "LICENSE"
+homepage = "https://github.com/conqp/grid/"
 version = "0.2.0"
 edition = "2021"
 
