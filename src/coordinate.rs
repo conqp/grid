@@ -1,6 +1,7 @@
 mod errors;
 pub use errors::CoordinateParseError;
 
+/// Coordinate of a cell on a two-dimensional grid
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Coordinate {
     x: usize,
@@ -19,7 +20,6 @@ const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
     (1, 1),
 ];
 
-/// Coordinate of a cell on a two-dimensional grid
 impl Coordinate {
     /// Creates a new coordinate
     ///
