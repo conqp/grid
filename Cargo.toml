@@ -1,5 +1,6 @@
 [package]
 name = "grid2d"
+authors = ["Richard Neumann <mail@richard-neumann.de>"]
 description = "Two dimensional grid of runtime-defined, but unchangable size"
 license-file = "LICENSE"
 homepage = "https://github.com/conqp/grid/"
