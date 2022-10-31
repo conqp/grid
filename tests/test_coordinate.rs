@@ -1,4 +1,6 @@
 use grid::Coordinate;
+use grid::CoordinateParseError;
+use std::str::FromStr;
 
 #[test]
 fn coordinate_from_tuple() {
@@ -26,4 +28,47 @@ fn tuple_from_coordinate_ref() {
     let coordinate_ref = &coordinate;
     let (x, y) = coordinate_ref.into();
     assert_eq!((32, 1337), (x, y));
+}
+
+#[test]
+fn parse_coordinate() {
+    let coordinate = Coordinate::from_str("-1 1");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
+
+    let coordinate = Coordinate::from_str("1 -1");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
+
+    let coordinate = Coordinate::from_str("a 42");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
+
+    let coordinate = Coordinate::from_str("42 a");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
+
+    let coordinate = Coordinate::from_str("42");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::NotTwoNumbers);
+
+    let coordinate = Coordinate::from_str(" 42");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
+
+    let coordinate = Coordinate::from_str("abc");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::NotTwoNumbers);
+
+    let coordinate = Coordinate::from_str("42 ");
+    assert!(coordinate.is_err());
+    assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
+
+    let coordinate = Coordinate::from_str("42 1337");
+    assert!(coordinate.is_ok());
+    assert_eq!(coordinate.unwrap(), Coordinate::new(42, 1337));
+
+    let coordinate = Coordinate::from_str("0 0");
+    assert!(coordinate.is_ok());
+    assert_eq!(coordinate.unwrap(), Coordinate::new(0, 0));
 }
