@@ -1,5 +1,5 @@
-use grid::Coordinate;
-use grid::CoordinateParseError;
+use grid2d::Coordinate;
+use grid2d::CoordinateParseError;
 use std::str::FromStr;
 
 #[test]

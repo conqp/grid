@@ -1,5 +1,5 @@
-use grid::Coordinate;
-use grid::Grid;
+use grid2d::Coordinate;
+use grid2d::Grid;
 
 #[test]
 fn zero_width() {
