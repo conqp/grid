@@ -81,13 +81,12 @@ impl Coordinate {
     }
 
     /// Returns all potential neighboring coordinates
-    pub fn neighbors(&self) -> Vec<Coordinate> {
+    pub fn neighbors(&self) -> impl Iterator<Item = Coordinate> + '_ {
         NEIGHBOR_OFFSETS
             .iter()
             .map(|(dx, dy)| (self.x as isize + dx, self.y as isize + dy))
             .filter(|&(x, y)| 0 <= x && 0 <= y)
             .map(|(x, y)| Self::new(x as usize, y as usize))
-            .collect()
     }
 }
 
