@@ -1,7 +1,7 @@
 use crate::coordinate::Coordinate;
 
 /// A two-dimensional grid of arbitrary cell content
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Grid<T> {
     width: usize,
     items: Vec<T>,
