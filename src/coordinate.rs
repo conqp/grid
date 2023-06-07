@@ -90,6 +90,54 @@ impl Coordinate {
     }
 }
 
+/// Create a Coordinate from a &str
+///
+/// # Examples
+///
+/// ```
+/// use std::str::FromStr;
+/// use grid2d::{Coordinate, CoordinateParseError};
+///
+/// let coordinate = Coordinate::from_str("-1 1");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
+///
+/// let coordinate = Coordinate::from_str("1 -1");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
+///
+/// let coordinate = Coordinate::from_str("a 42");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
+///
+/// let coordinate = Coordinate::from_str("42 a");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
+///
+/// let coordinate = Coordinate::from_str("42");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::NotTwoNumbers);
+///
+/// let coordinate = Coordinate::from_str(" 42");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
+///
+/// let coordinate = Coordinate::from_str("abc");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::NotTwoNumbers);
+///
+/// let coordinate = Coordinate::from_str("42 ");
+/// assert!(coordinate.is_err());
+/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
+///
+/// let coordinate = Coordinate::from_str("42 1337");
+/// assert!(coordinate.is_ok());
+/// assert_eq!(coordinate.unwrap(), Coordinate::new(42, 1337));
+///
+/// let coordinate = Coordinate::from_str("0 0");
+/// assert!(coordinate.is_ok());
+/// assert_eq!(coordinate.unwrap(), Coordinate::new(0, 0));
+/// ```
 impl std::str::FromStr for Coordinate {
     type Err = CoordinateParseError;
 
@@ -100,7 +148,6 @@ impl std::str::FromStr for Coordinate {
         }
     }
 }
-
 impl std::fmt::Display for Coordinate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}x{}", self.x, self.y)
@@ -113,24 +160,62 @@ impl From<&Coordinate> for Coordinate {
     }
 }
 
+/// Create a coordinate from a (usize, usize) tuple
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// assert_eq!(Coordinate::new(32, 1337), (32, 1337).into());
+/// ```
 impl From<(usize, usize)> for Coordinate {
     fn from((x, y): (usize, usize)) -> Self {
         Self::new(x, y)
     }
 }
 
+/// Create a Coordinate from a reference to a (usize, usize) tuple
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// assert_eq!(Coordinate::new(32, 1337), (&(32, 1337)).into());
+/// ```
 impl From<&(usize, usize)> for Coordinate {
     fn from((x, y): &(usize, usize)) -> Self {
         Self::new(*x, *y)
     }
 }
 
+/// Create a (usize, usize) tuple tuple from a Coordinate
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// let (x, y) = Coordinate::new(32, 1337).into();
+/// assert_eq!((32, 1337), (x, y));
+/// ```
 impl From<Coordinate> for (usize, usize) {
     fn from(coordinate: Coordinate) -> Self {
         (coordinate.x, coordinate.y)
     }
 }
 
+/// Create a (usize, usize) tuple from a Coordinate reference
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// let (x, y) = (&Coordinate::new(32, 1337)).into();
+/// assert_eq!((32, 1337), (x, y));
+/// ```
 impl From<&Coordinate> for (usize, usize) {
     fn from(coordinate: &Coordinate) -> Self {
         (coordinate.x, coordinate.y)

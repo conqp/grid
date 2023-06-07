@@ -35,8 +35,6 @@ impl<T> Grid<T> {
     /// assert_eq!(Grid::new(2, 0, String::new).height(), 0);
     /// assert_eq!(Grid::new(0, 3, String::new).width(), 0);
     /// ```
-    ///
-    ///
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,
@@ -71,6 +69,14 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate of the cell
     ///
+    /// # Examples
+    ///
+    /// ```
+    /// use grid2d::Grid;
+    ///
+    /// let grid = Grid::try_from(("Hello world!".chars(), 4)).unwrap();
+    /// assert_eq!(grid.get((0, 2)).unwrap(), &'r');
+    /// ```
     pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
         self.items.get(coordinate.into().to_index(self.width))
     }
@@ -95,6 +101,31 @@ impl<T> Grid<T> {
     /// Yields mutable references to the grid's items
     ///
     /// Iterates over columns, then rows
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use grid2d::{Grid, Coordinate};
+    /// let mut grid = Grid::new(3, 4, String::new);
+    /// let text = "Hello world!";
+    ///
+    /// for (index, item) in grid.iter_mut().enumerate() {
+    ///     item.push(text.as_bytes()[index] as char);
+    /// }
+    ///
+    /// assert_eq!(grid.get(Coordinate::new(0, 0)).unwrap(), "H");
+    /// assert_eq!(grid.get(Coordinate::new(1, 0)).unwrap(), "e");
+    /// assert_eq!(grid.get(Coordinate::new(2, 0)).unwrap(), "l");
+    /// assert_eq!(grid.get(Coordinate::new(0, 1)).unwrap(), "l");
+    /// assert_eq!(grid.get(Coordinate::new(1, 1)).unwrap(), "o");
+    /// assert_eq!(grid.get(Coordinate::new(2, 1)).unwrap(), " ");
+    /// assert_eq!(grid.get(Coordinate::new(0, 2)).unwrap(), "w");
+    /// assert_eq!(grid.get(Coordinate::new(1, 2)).unwrap(), "o");
+    /// assert_eq!(grid.get(Coordinate::new(2, 2)).unwrap(), "r");
+    /// assert_eq!(grid.get(Coordinate::new(0, 3)).unwrap(), "l");
+    /// assert_eq!(grid.get(Coordinate::new(1, 3)).unwrap(), "d");
+    /// assert_eq!(grid.get(Coordinate::new(2, 3)).unwrap(), "!");
+    /// ```
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
         self.items.iter_mut()
     }
@@ -156,7 +187,6 @@ impl<T> Grid<T> {
     /// assert_eq!(grid.neighbors(Coordinate::new(2, 2)).count(), 5);
     /// assert_eq!(grid.neighbors(Coordinate::new(2, 3)).count(), 3);
     /// ```
-    ///
     pub fn neighbors(
         &self,
         coordinate: impl Into<Coordinate>,
@@ -259,6 +289,7 @@ where
 /// assert!(Grid::try_from((items.clone(), 4)).is_ok());
 /// assert_eq!(Some(GridConstructionError::VecSizeNotMultipleOfWidth), Grid::try_from((items.clone(), 3)).err());
 /// assert_eq!(Some(GridConstructionError::ZeroSize), Grid::try_from((items.clone(), 0)).err());
+/// ```
 impl<T> TryFrom<(T, usize)> for Grid<T::Item>
 where
     T: IntoIterator,
