@@ -25,56 +25,6 @@ impl<T> Grid<T> {
         }
     }
 
-    /// Returns a new instance of Grid from a given Vec if successful or an error
-    ///
-    /// # Arguments
-    ///
-    /// * `vec` - The Vec to create the grid from
-    /// * `width` - The width of the grid
-    ///
-    /// `vec.len()` must be divisible by `width`
-    ///
-    pub fn from_vec(vec: Vec<T>, width: usize) -> Result<Self, &'static str> {
-        if width == 0 {
-            Err("width must not be zero")
-        } else if vec.len() % width != 0 {
-            Err("vec size must be a multiple of width")
-        } else {
-            Ok(Self { width, items: vec })
-        }
-    }
-
-    /// Returns a new instance of Grid from a given iterator if successful or an error
-    ///
-    /// # Arguments
-    ///
-    /// * `iterator` - The iterator to create the grid from
-    /// * `width` - The width of the grid
-    ///
-    /// The amount of items in `iterator` must be divisible by `width`
-    ///
-    pub fn from_iter(
-        iterator: impl Iterator<Item = T>,
-        width: usize,
-    ) -> Result<Self, &'static str> {
-        Self::from_vec(iterator.collect(), width)
-    }
-
-    /// Returns a new instance of Grid from a given slice if successful or an error
-    ///
-    /// # Arguments
-    ///
-    /// * `slice` - The slice to create the grid from
-    /// * `width` - The width of the grid
-    ///
-    /// The amount of items in `slice` must be divisible by `width`
-    pub fn from_slice(slice: &[T], width: usize) -> Result<Self, &'static str>
-    where
-        T: Clone,
-    {
-        Self::from_vec(Vec::from(slice), width)
-    }
-
     /// Returns the width of the grid
     pub fn width(&self) -> usize {
         self.width
@@ -239,5 +189,25 @@ where
         }
 
         Ok(())
+    }
+}
+
+impl<T> TryFrom<(T, usize)> for Grid<T::Item>
+where
+    T: IntoIterator,
+{
+    type Error = &'static str;
+
+    fn try_from((into_iterator, width): (T, usize)) -> Result<Grid<T::Item>, &'static str> {
+        let iter = into_iterator.into_iter();
+        let items = iter.collect::<Vec<_>>();
+
+        if width == 0 {
+            Err("width must not be zero")
+        } else if items.len() % width != 0 {
+            Err("vec size must be a multiple of width")
+        } else {
+            Ok(Grid { width, items })
+        }
     }
 }

@@ -81,6 +81,6 @@ fn neighbors() {
 
 #[test]
 fn access_by_tuple() {
-    let grid = Grid::from_iter("Hello world!".chars(), 4).unwrap();
+    let grid = Grid::try_from(("Hello world!".chars(), 4)).unwrap();
     assert_eq!(grid.get((0, 2)).unwrap(), &'r');
 }
