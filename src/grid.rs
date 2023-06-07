@@ -22,7 +22,7 @@ impl<T> Grid<T> {
     /// # Examples
     ///
     /// ```
-    /// use grid2d::Grid;;
+    /// use grid2d::Grid;
     ///
     /// let width = 42;
     /// let height = 1337;
