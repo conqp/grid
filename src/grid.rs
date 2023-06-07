@@ -199,14 +199,16 @@ where
     type Error = &'static str;
 
     fn try_from((into_iterator, width): (T, usize)) -> Result<Grid<T::Item>, &'static str> {
-        let items = into_iterator.into_iter().collect::<Vec<_>>();
-
         if width == 0 {
             Err("width must not be zero")
-        } else if items.len() % width != 0 {
-            Err("vec size must be a multiple of width")
         } else {
-            Ok(Grid { width, items })
+            let items = into_iterator.into_iter().collect::<Vec<_>>();
+
+            if items.len() % width != 0 {
+                Err("vec size must be a multiple of width")
+            } else {
+                Ok(Grid { width, items })
+            }
         }
     }
 }
