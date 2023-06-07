@@ -249,7 +249,7 @@ where
 
 /// Create a Grid from a tuple of an iterable and the desired width.
 ///
-/// Examples:
+/// # Examples
 ///
 /// ```
 /// use grid2d::{Grid, GridConstructionError};
