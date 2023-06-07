@@ -209,3 +209,22 @@ impl<T> Grid<T> {
         coordinate.x() < self.width && coordinate.y() < self.height()
     }
 }
+
+impl<T> Grid<T>
+where
+    T: Default,
+{
+    /// Returns a new instance of Grid for a type that implements the Default trait
+    ///
+    /// # Arguments
+    ///
+    /// * `width` - The width of the grid
+    /// * `height` - The height of the grid
+    ///
+    pub fn new_default(width: usize, height: usize) -> Self {
+        Self {
+            width,
+            items: (0..width * height).map(|_| T::default()).collect(),
+        }
+    }
+}
