@@ -103,6 +103,42 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate who's neighbors shall be yielded
     ///
+    /// # Examples
+    ///
+    /// ```
+    /// use grid2d::{Grid, Coordinate};
+    ///
+    /// let mut grid = Grid::new(3, 4, String::new);
+    /// let text = "Hello world!";
+    /// let neighbors: [[&str; 3]; 4] = [
+    ///     ["H", "e", "l"],
+    ///     ["l", "o", " "],
+    ///     ["w", "o", "r"],
+    ///     ["l", "d", "!"],
+    /// ];
+    ///
+    /// for (index, item) in grid.iter_mut().enumerate() {
+    ///     item.push(text.chars().nth(index).unwrap());
+    /// }
+    ///
+    /// for (coordinate, neighbor) in grid.neighbors(Coordinate::new(1, 1)) {
+    ///     assert_eq!(neighbor, neighbors[coordinate.y()][coordinate.x()]);
+    /// }
+    ///
+    /// assert_eq!(grid.neighbors(Coordinate::new(0, 0)).count(), 3);
+    /// assert_eq!(grid.neighbors(Coordinate::new(0, 1)).count(), 5);
+    /// assert_eq!(grid.neighbors(Coordinate::new(0, 2)).count(), 5);
+    /// assert_eq!(grid.neighbors(Coordinate::new(0, 3)).count(), 3);
+    /// assert_eq!(grid.neighbors(Coordinate::new(1, 0)).count(), 5);
+    /// assert_eq!(grid.neighbors(Coordinate::new(1, 1)).count(), 8);
+    /// assert_eq!(grid.neighbors(Coordinate::new(1, 2)).count(), 8);
+    /// assert_eq!(grid.neighbors(Coordinate::new(1, 3)).count(), 5);
+    /// assert_eq!(grid.neighbors(Coordinate::new(2, 0)).count(), 3);
+    /// assert_eq!(grid.neighbors(Coordinate::new(2, 1)).count(), 5);
+    /// assert_eq!(grid.neighbors(Coordinate::new(2, 2)).count(), 5);
+    /// assert_eq!(grid.neighbors(Coordinate::new(2, 3)).count(), 3);
+    /// ```
+    ///
     pub fn neighbors(
         &self,
         coordinate: impl Into<Coordinate>,
