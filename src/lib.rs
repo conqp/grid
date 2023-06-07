@@ -1,4 +1,5 @@
 mod coordinate;
+mod error;
 mod grid;
 
 pub use crate::grid::Grid;

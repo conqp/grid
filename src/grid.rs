@@ -1,4 +1,5 @@
 use crate::coordinate::Coordinate;
+use crate::error::GridConstructionError;
 use itertools::Itertools;
 use std::fmt::{Display, Formatter};
 
@@ -196,16 +197,16 @@ impl<T> TryFrom<(T, usize)> for Grid<T::Item>
 where
     T: IntoIterator,
 {
-    type Error = &'static str;
+    type Error = GridConstructionError;
 
-    fn try_from((into_iterator, width): (T, usize)) -> Result<Grid<T::Item>, &'static str> {
+    fn try_from((into_iterator, width): (T, usize)) -> Result<Grid<T::Item>, Self::Error> {
         if width == 0 {
-            Err("width must not be zero")
+            Err(Self::Error::ZeroSize)
         } else {
             let items = into_iterator.into_iter().collect::<Vec<_>>();
 
             if items.len() % width != 0 {
-                Err("vec size must be a multiple of width")
+                Err(Self::Error::VecSizeNotMultipleOfWidth)
             } else {
                 Ok(Grid { width, items })
             }
