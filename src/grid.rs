@@ -193,7 +193,6 @@ impl<T> Grid<T> {
         coordinate
             .into()
             .neighbors()
-            .into_iter()
             .filter(|coordinate| self.contains(*coordinate))
             .collect()
     }
