@@ -19,6 +19,24 @@ impl<T> Grid<T> {
     /// * `height` - The height of the grid
     /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
     ///
+    /// # Examples
+    ///
+    /// ```
+    /// use grid2d::Grid;;
+    ///
+    /// let width = 42;
+    /// let height = 1337;
+    /// let grid = Grid::new(width, height, String::new);
+    ///
+    /// assert_eq!(grid.width(), width);
+    /// assert_eq!(grid.height(), height);
+    /// assert_eq!(grid.size(), width * height);
+    ///
+    /// assert_eq!(Grid::new(2, 0, String::new).height(), 0);
+    /// assert_eq!(Grid::new(0, 3, String::new).width(), 0);
+    /// ```
+    ///
+    ///
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
         Self {
             width,

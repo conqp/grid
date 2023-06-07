@@ -2,28 +2,6 @@ use grid2d::Coordinate;
 use grid2d::Grid;
 
 #[test]
-fn zero_width() {
-    let grid = Grid::new(0, 3, String::new);
-    assert_eq!(grid.width(), 0);
-}
-
-#[test]
-fn zero_height() {
-    let grid = Grid::new(2, 0, String::new);
-    assert_eq!(grid.height(), 0);
-}
-
-#[test]
-fn size() {
-    let width = 42;
-    let height = 1337;
-    let grid = Grid::new(width, height, String::new);
-    assert_eq!(grid.width(), width);
-    assert_eq!(grid.height(), height);
-    assert_eq!(grid.size(), width * height);
-}
-
-#[test]
 fn storage() {
     let mut grid = Grid::new(3, 4, String::new);
     let text = "Hello world!";
