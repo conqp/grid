@@ -201,12 +201,12 @@ where
 
     fn try_from((into_iterator, width): (T, usize)) -> Result<Grid<T::Item>, Self::Error> {
         if width == 0 {
-            Err(Self::Error::ZeroSize)
+            Err(GridConstructionError::ZeroSize)
         } else {
             let items = into_iterator.into_iter().collect::<Vec<_>>();
 
             if items.len() % width != 0 {
-                Err(Self::Error::VecSizeNotMultipleOfWidth)
+                Err(GridConstructionError::VecSizeNotMultipleOfWidth)
             } else {
                 Ok(Grid { width, items })
             }
