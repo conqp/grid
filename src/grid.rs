@@ -221,9 +221,6 @@ where
     /// * `height` - The height of the grid
     ///
     pub fn new_default(width: usize, height: usize) -> Self {
-        Self {
-            width,
-            items: (0..width * height).map(|_| T::default()).collect(),
-        }
+        Self::new(width, height, T::default)
     }
 }
