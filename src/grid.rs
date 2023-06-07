@@ -290,8 +290,8 @@ where
 /// assert!(Grid::try_from((items.clone(), 4)).is_ok());
 /// assert!(Grid::try_from((items.clone().iter(), 4)).is_ok());
 /// assert!(Grid::try_from((items2, 4)).is_ok());
-/// assert_eq!(Some(GridConstructionError::VecSizeNotMultipleOfWidth), Grid::try_from((items.clone(), 3)).err());
-/// assert_eq!(Some(GridConstructionError::ZeroSize), Grid::try_from((items.clone(), 0)).err());
+/// assert_eq!( Grid::try_from((items.clone(), 3)).err(), Some(GridConstructionError::VecSizeNotMultipleOfWidth));
+/// assert_eq!(Grid::try_from((items.clone(), 0)).err(), Some(GridConstructionError::ZeroSize));
 /// ```
 impl<T> TryFrom<(T, usize)> for Grid<T::Item>
 where
