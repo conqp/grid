@@ -285,8 +285,11 @@ where
 /// use grid2d::{Grid, GridConstructionError};
 ///
 /// let items = vec![1, 2, 3, 4, 5, 6, 7, 8];
+/// let items2 = [1, 2, 3, 4, 5, 6, 7, 8];
 ///
 /// assert!(Grid::try_from((items.clone(), 4)).is_ok());
+/// assert!(Grid::try_from((items.clone().iter(), 4)).is_ok());
+/// assert!(Grid::try_from((items2, 4)).is_ok());
 /// assert_eq!(Some(GridConstructionError::VecSizeNotMultipleOfWidth), Grid::try_from((items.clone(), 3)).err());
 /// assert_eq!(Some(GridConstructionError::ZeroSize), Grid::try_from((items.clone(), 0)).err());
 /// ```
