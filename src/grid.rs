@@ -1,4 +1,5 @@
 use crate::coordinate::Coordinate;
+use std::fmt::{Display, Formatter};
 
 /// A two-dimensional grid of arbitrary cell content
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -222,5 +223,29 @@ where
     ///
     pub fn new_default(width: usize, height: usize) -> Self {
         Self::new(width, height, T::default)
+    }
+}
+
+impl<T> Display for Grid<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        for row in self.rows() {
+            if let Some(err) = writeln!(
+                f,
+                "{}",
+                row.into_iter()
+                    .map(T::to_string)
+                    .collect::<Vec<_>>()
+                    .join("\t")
+            )
+            .err()
+            {
+                return Err(err);
+            }
+        }
+
+        Ok(())
     }
 }
