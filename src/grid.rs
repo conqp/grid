@@ -202,7 +202,7 @@ impl<T> Grid<T> {
     ///
     /// # Arguments
     ///
-    /// * `coordinate` - The coordinate who's to be tested
+    /// * `coordinate` - The coordinate which is to be tested
     ///
     pub fn contains(&self, coordinate: impl Into<Coordinate>) -> bool {
         let coordinate = coordinate.into();
