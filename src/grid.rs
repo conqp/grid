@@ -1,4 +1,5 @@
 use crate::coordinate::Coordinate;
+use itertools::Itertools;
 use std::fmt::{Display, Formatter};
 
 /// A two-dimensional grid of arbitrary cell content
@@ -232,16 +233,7 @@ where
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         for row in self.rows() {
-            if let Some(err) = writeln!(
-                f,
-                "{}",
-                row.into_iter()
-                    .map(T::to_string)
-                    .collect::<Vec<_>>()
-                    .join("\t")
-            )
-            .err()
-            {
+            if let Some(err) = writeln!(f, "{}", row.iter().join("\t")).err() {
                 return Err(err);
             }
         }

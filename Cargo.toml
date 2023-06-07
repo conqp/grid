@@ -11,3 +11,6 @@ keywords = [ "2D", "array", "matrix", "data-structure"]
 categories = ["data-structures"]
 version = "0.2.4"
 edition = "2021"
+
+[dependencies]
+itertools = "*"
