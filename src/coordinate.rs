@@ -98,45 +98,16 @@ impl Coordinate {
 /// use std::str::FromStr;
 /// use grid2d::{Coordinate, CoordinateParseError};
 ///
-/// let coordinate = Coordinate::from_str("-1 1");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
-///
-/// let coordinate = Coordinate::from_str("1 -1");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
-///
-/// let coordinate = Coordinate::from_str("a 42");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
-///
-/// let coordinate = Coordinate::from_str("42 a");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
-///
-/// let coordinate = Coordinate::from_str("42");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::NotTwoNumbers);
-///
-/// let coordinate = Coordinate::from_str(" 42");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidXValue);
-///
-/// let coordinate = Coordinate::from_str("abc");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::NotTwoNumbers);
-///
-/// let coordinate = Coordinate::from_str("42 ");
-/// assert!(coordinate.is_err());
-/// assert_eq!(coordinate.unwrap_err(), CoordinateParseError::InvalidYValue);
-///
-/// let coordinate = Coordinate::from_str("42 1337");
-/// assert!(coordinate.is_ok());
-/// assert_eq!(coordinate.unwrap(), Coordinate::new(42, 1337));
-///
-/// let coordinate = Coordinate::from_str("0 0");
-/// assert!(coordinate.is_ok());
-/// assert_eq!(coordinate.unwrap(), Coordinate::new(0, 0));
+/// assert_eq!(Coordinate::from_str("-1 1").err(), Some(CoordinateParseError::InvalidXValue));
+/// assert_eq!(Coordinate::from_str("1 -1").err(), Some(CoordinateParseError::InvalidYValue));
+/// assert_eq!(Coordinate::from_str("a 42").err(), Some(CoordinateParseError::InvalidXValue));
+/// assert_eq!(Coordinate::from_str("42 a").err(), Some(CoordinateParseError::InvalidYValue));
+/// assert_eq!(Coordinate::from_str("42").err(), Some(CoordinateParseError::NotTwoNumbers));
+/// assert_eq!(Coordinate::from_str(" 42").err(), Some(CoordinateParseError::InvalidXValue));
+/// assert_eq!(Coordinate::from_str("abc").err(), Some(CoordinateParseError::NotTwoNumbers));
+/// assert_eq!(Coordinate::from_str("42 ").err(), Some(CoordinateParseError::InvalidYValue));
+/// assert_eq!(Coordinate::from_str("42 1337").ok(), Some(Coordinate::new(42, 1337)));
+/// assert_eq!(Coordinate::from_str("0 0").ok(), Some(Coordinate::new(0, 0)));
 /// ```
 impl std::str::FromStr for Coordinate {
     type Err = CoordinateParseError;
