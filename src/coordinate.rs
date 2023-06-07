@@ -1,5 +1,4 @@
-mod errors;
-pub use errors::CoordinateParseError;
+use crate::errors::CoordinateParseError;
 
 /// Coordinate of a cell on a two-dimensional grid
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]

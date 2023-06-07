@@ -1,5 +1,5 @@
 use crate::coordinate::Coordinate;
-use crate::error::GridConstructionError;
+use crate::errors::GridConstructionError;
 use itertools::Itertools;
 use std::fmt::{Display, Formatter};
 

@@ -1,8 +1,7 @@
 mod coordinate;
-mod error;
+mod errors;
 mod grid;
 
 pub use crate::grid::Grid;
 pub use coordinate::Coordinate;
-pub use coordinate::CoordinateParseError;
-pub use error::GridConstructionError;
+pub use errors::{CoordinateParseError, GridConstructionError};
