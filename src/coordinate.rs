@@ -77,17 +77,36 @@ impl Coordinate {
 /// # Examples
 ///
 /// ```
+/// use std::num::IntErrorKind;
 /// use std::str::FromStr;
 /// use grid2d::{Coordinate, CoordinateParseError};
 ///
-/// assert_eq!(Coordinate::from_str("-1 1").err(), Some(CoordinateParseError::InvalidXValue));
-/// assert_eq!(Coordinate::from_str("1 -1").err(), Some(CoordinateParseError::InvalidYValue));
-/// assert_eq!(Coordinate::from_str("a 42").err(), Some(CoordinateParseError::InvalidXValue));
-/// assert_eq!(Coordinate::from_str("42 a").err(), Some(CoordinateParseError::InvalidYValue));
+/// assert!(match Coordinate::from_str("-1 1").unwrap_err() {
+///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert!(match Coordinate::from_str("1 -1").unwrap_err() {
+///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert!(match Coordinate::from_str("a 42").unwrap_err() {
+///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert!(match Coordinate::from_str("42 a").unwrap_err() {
+///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
 /// assert_eq!(Coordinate::from_str("42").err(), Some(CoordinateParseError::NotTwoNumbers));
-/// assert_eq!(Coordinate::from_str(" 42").err(), Some(CoordinateParseError::InvalidXValue));
+/// assert!(match Coordinate::from_str(" 42").unwrap_err() {
+///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::Empty,
+///     _ => false,
+/// });
 /// assert_eq!(Coordinate::from_str("abc").err(), Some(CoordinateParseError::NotTwoNumbers));
-/// assert_eq!(Coordinate::from_str("42 ").err(), Some(CoordinateParseError::InvalidYValue));
+/// assert!(match Coordinate::from_str("42 ").unwrap_err() {
+///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::Empty,
+///     _ => false,
+/// });
 /// assert_eq!(Coordinate::from_str("42 1337").ok(), Some(Coordinate::new(42, 1337)));
 /// assert_eq!(Coordinate::from_str("0 0").ok(), Some(Coordinate::new(0, 0)));
 /// ```
