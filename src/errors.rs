@@ -1,23 +1,20 @@
 use std::fmt::{Display, Formatter};
+use std::num::ParseIntError;
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CoordinateParseError {
     NotTwoNumbers,
-    InvalidXValue,
-    InvalidYValue,
+    InvalidXValue(ParseIntError),
+    InvalidYValue(ParseIntError),
 }
 
 impl Display for CoordinateParseError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Self::NotTwoNumbers => "not two numbers",
-                Self::InvalidXValue => "invalid x value",
-                Self::InvalidYValue => "invalid y value",
-            }
-        )
+        match self {
+            Self::NotTwoNumbers => write!(f, "not two numbers"),
+            Self::InvalidXValue(error) => write!(f, "invalid x value: {}", error),
+            Self::InvalidYValue(error) => write!(f, "invalid y value: {}", error),
+        }
     }
 }
 

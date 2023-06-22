@@ -182,9 +182,9 @@ impl TryFrom<(&str, &str)> for Coordinate {
         match x.parse::<usize>() {
             Ok(x) => match y.parse::<usize>() {
                 Ok(y) => Ok(Coordinate::new(x, y)),
-                Err(_) => Err(CoordinateParseError::InvalidYValue),
+                Err(error) => Err(CoordinateParseError::InvalidYValue(error)),
             },
-            Err(_) => Err(CoordinateParseError::InvalidXValue),
+            Err(error) => Err(CoordinateParseError::InvalidXValue(error)),
         }
     }
 }
