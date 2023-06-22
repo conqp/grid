@@ -176,12 +176,6 @@ impl From<&Coordinate> for (usize, usize) {
     }
 }
 
-/// Creates a coordinate from a tuple of two string slices on success or returns an error code
-///
-/// # Arguments
-///
-/// * `(x, y)` - Tuple of the x and y component as string slices
-///
 impl TryFrom<(&str, &str)> for Coordinate {
     type Error = CoordinateParseError;
 
