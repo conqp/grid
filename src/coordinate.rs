@@ -40,8 +40,7 @@ impl Coordinate {
     ///
     pub fn from_width_and_index(width: usize, index: usize) -> Self {
         let x = index % width;
-        let y = (index - x) / width;
-        Self::new(x, y)
+        Self::new(x, (index - x) / width)
     }
 
     /// Returns the x component
