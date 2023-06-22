@@ -44,22 +44,6 @@ impl Coordinate {
         Self::new(x, y)
     }
 
-    /// Creates a coordinate from a tuple of two string slices on success or returns an error code
-    ///
-    /// # Arguments
-    ///
-    /// * `(x, y)` - Tuple of the x and y component as string slices
-    ///
-    pub fn from_str_pair((x, y): (&str, &str)) -> Result<Self, CoordinateParseError> {
-        match x.parse::<usize>() {
-            Ok(x) => match y.parse::<usize>() {
-                Ok(y) => Ok(Coordinate::new(x, y)),
-                Err(_) => Err(CoordinateParseError::InvalidYValue),
-            },
-            Err(_) => Err(CoordinateParseError::InvalidXValue),
-        }
-    }
-
     /// Returns the x component
     pub fn x(&self) -> usize {
         self.x
@@ -113,7 +97,7 @@ impl std::str::FromStr for Coordinate {
 
     fn from_str(string: &str) -> Result<Self, Self::Err> {
         match string.split_once(' ') {
-            Some(value) => Self::from_str_pair(value),
+            Some((x, y)) => Self::try_from((x, y)),
             None => Err(CoordinateParseError::NotTwoNumbers),
         }
     }
@@ -189,5 +173,25 @@ impl From<Coordinate> for (usize, usize) {
 impl From<&Coordinate> for (usize, usize) {
     fn from(coordinate: &Coordinate) -> Self {
         (coordinate.x, coordinate.y)
+    }
+}
+
+/// Creates a coordinate from a tuple of two string slices on success or returns an error code
+///
+/// # Arguments
+///
+/// * `(x, y)` - Tuple of the x and y component as string slices
+///
+impl TryFrom<(&str, &str)> for Coordinate {
+    type Error = CoordinateParseError;
+
+    fn try_from((x, y): (&str, &str)) -> Result<Self, Self::Error> {
+        match x.parse::<usize>() {
+            Ok(x) => match y.parse::<usize>() {
+                Ok(y) => Ok(Coordinate::new(x, y)),
+                Err(_) => Err(CoordinateParseError::InvalidYValue),
+            },
+            Err(_) => Err(CoordinateParseError::InvalidXValue),
+        }
     }
 }
