@@ -72,7 +72,7 @@ impl Coordinate {
     pub fn neighbors(&self) -> impl Iterator<Item = Self> + '_ {
         NEIGHBOR_OFFSETS
             .iter()
-            .filter_map(move |delta| self + delta)
+            .filter_map(move |offset| self + offset)
     }
 }
 
