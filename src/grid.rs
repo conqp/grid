@@ -43,11 +43,13 @@ impl<T> Grid<T> {
     }
 
     /// Returns the width of the grid
-    pub fn width(&self) -> usize {
+    #[must_use]
+    pub const fn width(&self) -> usize {
         self.width
     }
 
     /// Returns the height of the grid
+    #[must_use]
     pub fn height(&self) -> usize {
         if self.width == 0 {
             0
@@ -59,6 +61,7 @@ impl<T> Grid<T> {
     /// Returns the size of the grid
     ///
     /// This is equal to `grid.width() * grid.height()`
+    #[must_use]
     pub fn size(&self) -> usize {
         self.width * self.height()
     }
@@ -299,16 +302,16 @@ where
 {
     type Error = GridConstructionError;
 
-    fn try_from((into_iterator, width): (T, usize)) -> Result<Grid<T::Item>, Self::Error> {
+    fn try_from((into_iterator, width): (T, usize)) -> Result<Self, Self::Error> {
         if width == 0 {
             Err(GridConstructionError::ZeroSize)
         } else {
             let items = into_iterator.into_iter().collect::<Vec<_>>();
 
-            if items.len() % width != 0 {
-                Err(GridConstructionError::VecSizeNotMultipleOfWidth)
+            if items.len() % width == 0 {
+                Ok(Self { width, items })
             } else {
-                Ok(Grid { width, items })
+                Err(GridConstructionError::VecSizeNotMultipleOfWidth)
             }
         }
     }

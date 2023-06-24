@@ -12,8 +12,8 @@ impl Display for CoordinateParseError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::NotTwoNumbers => write!(f, "not two numbers"),
-            Self::InvalidXValue(error) => write!(f, "invalid x value: {}", error),
-            Self::InvalidYValue(error) => write!(f, "invalid y value: {}", error),
+            Self::InvalidXValue(error) => write!(f, "invalid x value: {error}"),
+            Self::InvalidYValue(error) => write!(f, "invalid y value: {error}"),
         }
     }
 }

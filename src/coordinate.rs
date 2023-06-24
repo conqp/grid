@@ -27,7 +27,8 @@ impl Coordinate {
     /// * `x` - The x component
     /// * `y` - The y component
     ///
-    pub fn new(x: usize, y: usize) -> Self {
+    #[must_use]
+    pub const fn new(x: usize, y: usize) -> Self {
         Self { x, y }
     }
 
@@ -38,18 +39,21 @@ impl Coordinate {
     /// * `width` - The grid's width
     /// * `index` - The index of the cell
     ///
-    pub fn from_width_and_index(width: usize, index: usize) -> Self {
+    #[must_use]
+    pub const fn from_width_and_index(width: usize, index: usize) -> Self {
         let x = index % width;
         Self::new(x, (index - x) / width)
     }
 
     /// Returns the x component
-    pub fn x(&self) -> usize {
+    #[must_use]
+    pub const fn x(&self) -> usize {
         self.x
     }
 
     /// Returns the y component
-    pub fn y(&self) -> usize {
+    #[must_use]
+    pub const fn y(&self) -> usize {
         self.y
     }
 
@@ -58,12 +62,13 @@ impl Coordinate {
     /// # Arguments
     /// * `width` - The width of the grid
     ///
-    pub fn to_index(&self, width: usize) -> usize {
+    #[must_use]
+    pub const fn to_index(&self, width: usize) -> usize {
         self.y * width + self.x
     }
 
     /// Returns all potential neighboring coordinates
-    pub fn neighbors(&self) -> impl Iterator<Item = Coordinate> + '_ {
+    pub fn neighbors(&self) -> impl Iterator<Item = Self> + '_ {
         NEIGHBOR_OFFSETS
             .iter()
             .map(|(dx, dy)| (self.x as isize + dx, self.y as isize + dy))
@@ -126,8 +131,8 @@ impl std::fmt::Display for Coordinate {
     }
 }
 
-impl From<&Coordinate> for Coordinate {
-    fn from(coordinate: &Coordinate) -> Self {
+impl From<&Self> for Coordinate {
+    fn from(coordinate: &Self) -> Self {
         *coordinate
     }
 }
@@ -200,7 +205,7 @@ impl TryFrom<(&str, &str)> for Coordinate {
     fn try_from((x, y): (&str, &str)) -> Result<Self, Self::Error> {
         match x.parse::<usize>() {
             Ok(x) => match y.parse::<usize>() {
-                Ok(y) => Ok(Coordinate::new(x, y)),
+                Ok(y) => Ok(Self::new(x, y)),
                 Err(error) => Err(CoordinateParseError::InvalidYValue(error)),
             },
             Err(error) => Err(CoordinateParseError::InvalidXValue(error)),
