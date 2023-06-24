@@ -1,4 +1,5 @@
 use crate::errors::CoordinateParseError;
+use std::ops::Add;
 
 /// Coordinate of a cell on a two-dimensional grid
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -71,9 +72,18 @@ impl Coordinate {
     pub fn neighbors(&self) -> impl Iterator<Item = Self> + '_ {
         NEIGHBOR_OFFSETS
             .iter()
-            .map(|(dx, dy)| (self.x as isize + dx, self.y as isize + dy))
-            .filter(|&(x, y)| 0 <= x && 0 <= y)
-            .map(|(x, y)| Self::new(x as usize, y as usize))
+            .filter_map(move |(dx, dy)| self + (*dx, *dy))
+    }
+}
+
+impl Add<(isize, isize)> for &Coordinate {
+    type Output = Option<Coordinate>;
+
+    fn add(self, (dx, dy): (isize, isize)) -> Self::Output {
+        Some(Coordinate::new(
+            self.x.checked_add_signed(dx)?,
+            self.y.checked_add_signed(dy)?,
+        ))
     }
 }
 
