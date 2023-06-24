@@ -72,17 +72,17 @@ impl Coordinate {
     pub fn neighbors(&self) -> impl Iterator<Item = Self> + '_ {
         NEIGHBOR_OFFSETS
             .iter()
-            .filter_map(move |(dx, dy)| self + (*dx, *dy))
+            .filter_map(move |delta| self + delta)
     }
 }
 
-impl Add<(isize, isize)> for &Coordinate {
+impl Add<&(isize, isize)> for &Coordinate {
     type Output = Option<Coordinate>;
 
-    fn add(self, (dx, dy): (isize, isize)) -> Self::Output {
+    fn add(self, (dx, dy): &(isize, isize)) -> Self::Output {
         Some(Coordinate::new(
-            self.x.checked_add_signed(dx)?,
-            self.y.checked_add_signed(dy)?,
+            self.x.checked_add_signed(*dx)?,
+            self.y.checked_add_signed(*dy)?,
         ))
     }
 }
