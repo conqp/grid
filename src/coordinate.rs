@@ -135,6 +135,7 @@ impl std::str::FromStr for Coordinate {
         }
     }
 }
+
 impl std::fmt::Display for Coordinate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}x{}", self.x, self.y)
