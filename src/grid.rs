@@ -233,7 +233,7 @@ impl<T> Grid<T> {
         coordinate
             .into()
             .neighbors()
-            .filter(|coordinate| self.contains(*coordinate))
+            .filter(|coordinate| self.encompasses(*coordinate))
             .collect()
     }
 
@@ -243,7 +243,7 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate which is to be tested
     ///
-    pub fn contains(&self, coordinate: impl Into<Coordinate>) -> bool {
+    pub fn encompasses(&self, coordinate: impl Into<Coordinate>) -> bool {
         let coordinate = coordinate.into();
         coordinate.x() < self.width && coordinate.y() < self.height()
     }
