@@ -301,15 +301,16 @@ where
     type Error = GridConstructionError;
 
     fn try_from((into_iterator, width): (T, usize)) -> Result<Self, Self::Error> {
-        if width == 0 {
-            Err(GridConstructionError::ZeroSize)
-        } else {
-            let items = into_iterator.into_iter().collect::<Vec<_>>();
+        match width {
+            0 => Err(GridConstructionError::ZeroSize),
+            width => {
+                let items = into_iterator.into_iter().collect::<Vec<_>>();
 
-            if items.len() % width == 0 {
-                Ok(Self { width, items })
-            } else {
-                Err(GridConstructionError::VecSizeNotMultipleOfWidth)
+                if items.len() % width == 0 {
+                    Ok(Self { width, items })
+                } else {
+                    Err(GridConstructionError::VecSizeNotMultipleOfWidth)
+                }
             }
         }
     }
