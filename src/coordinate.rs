@@ -19,6 +19,7 @@ const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
     (0, 1),
     (1, 1),
 ];
+const SUPPORTED_SEPARATORS: [char; 3] = [',', 'x', ' '];
 
 impl Coordinate {
     /// Creates a new coordinate
@@ -100,7 +101,7 @@ impl Add<&(isize, isize)> for &Coordinate {
 ///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
 ///     _ => false,
 /// });
-/// assert!(match Coordinate::from_str("1 -1").unwrap_err() {
+/// assert!(match Coordinate::from_str("1,-1").unwrap_err() {
 ///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
 ///     _ => false,
 /// });
@@ -108,7 +109,7 @@ impl Add<&(isize, isize)> for &Coordinate {
 ///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
 ///     _ => false,
 /// });
-/// assert!(match Coordinate::from_str("42 a").unwrap_err() {
+/// assert!(match Coordinate::from_str("42xa").unwrap_err() {
 ///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
 ///     _ => false,
 /// });
@@ -118,19 +119,22 @@ impl Add<&(isize, isize)> for &Coordinate {
 ///     _ => false,
 /// });
 /// assert_eq!(Coordinate::from_str("abc").err(), Some(CoordinateParseError::NotTwoNumbers));
-/// assert!(match Coordinate::from_str("42 ").unwrap_err() {
+/// assert!(match Coordinate::from_str("42, ").unwrap_err() {
 ///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::Empty,
 ///     _ => false,
 /// });
-/// assert_eq!(Coordinate::from_str("42 1337").ok(), Some(Coordinate::new(42, 1337)));
-/// assert_eq!(Coordinate::from_str("0 0").ok(), Some(Coordinate::new(0, 0)));
+/// assert_eq!(Coordinate::from_str("42x1337").ok(), Some(Coordinate::new(42, 1337)));
+/// assert_eq!(Coordinate::from_str("0, 0").ok(), Some(Coordinate::new(0, 0)));
 /// ```
 impl std::str::FromStr for Coordinate {
     type Err = CoordinateParseError;
 
     fn from_str(string: &str) -> Result<Self, Self::Err> {
-        match string.split_once(' ') {
-            Some((x, y)) => Self::try_from((x, y)),
+        match SUPPORTED_SEPARATORS
+            .into_iter()
+            .find_map(|char| string.split_once(char))
+        {
+            Some((x, y)) => Self::try_from((x.trim(), y.trim())),
             None => Err(CoordinateParseError::NotTwoNumbers),
         }
     }
