@@ -271,9 +271,7 @@ where
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         for row in self.rows() {
-            if let Some(err) = writeln!(f, "{}", row.iter().join("\t")).err() {
-                return Err(err);
-            }
+            writeln!(f, "{}", row.iter().join("\t"))?;
         }
 
         Ok(())
