@@ -66,6 +66,12 @@ impl<T> Grid<T> {
         self.items.len()
     }
 
+    /// Returns true, if the grid is empty, else false
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.items.is_empty()
+    }
+
     /// Returns an Option to a reference of the cell content at the given coordinate
     ///
     /// # Arguments
