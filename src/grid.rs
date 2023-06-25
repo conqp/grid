@@ -265,6 +265,21 @@ where
     }
 }
 
+impl<T> Grid<T>
+where
+    T: PartialEq,
+{
+    /// Determines whether the grid contains the given element
+    ///
+    /// # Arguments
+    ///
+    /// * `item` - The coordinate which is to be tested
+    ///
+    pub fn contains(&self, element: &T) -> bool {
+        self.items.contains(element)
+    }
+}
+
 impl<T> Display for Grid<T>
 where
     T: Display,
