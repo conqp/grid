@@ -54,7 +54,7 @@ impl<T> Grid<T> {
         if self.width == 0 {
             0
         } else {
-            self.items.len() / self.width
+            self.size() / self.width
         }
     }
 
@@ -63,7 +63,7 @@ impl<T> Grid<T> {
     /// This is equal to `grid.width() * grid.height()`
     #[must_use]
     pub fn size(&self) -> usize {
-        self.width * self.height()
+        self.items.len()
     }
 
     /// Returns an Option to a reference of the cell content at the given coordinate
