@@ -7,7 +7,7 @@ use std::fmt::{Display, Formatter};
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Grid<T> {
     width: usize,
-    items: Vec<T>,
+    items: Box<[T]>,
 }
 
 impl<T> Grid<T> {
@@ -36,9 +36,13 @@ impl<T> Grid<T> {
     /// assert_eq!(Grid::new(0, 3, String::new).width(), 0);
     /// ```
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
+        Self::init(width, (0..width * height).map(|_| initializer()).collect())
+    }
+
+    fn init(width: usize, items: Vec<T>) -> Self {
         Self {
             width,
-            items: (0..width * height).map(|_| initializer()).collect(),
+            items: items.into_boxed_slice(),
         }
     }
 
@@ -50,7 +54,7 @@ impl<T> Grid<T> {
 
     /// Returns the height of the grid
     #[must_use]
-    pub fn height(&self) -> usize {
+    pub const fn height(&self) -> usize {
         if self.width == 0 {
             0
         } else {
@@ -62,13 +66,13 @@ impl<T> Grid<T> {
     ///
     /// This is equal to `grid.width() * grid.height()`
     #[must_use]
-    pub fn size(&self) -> usize {
+    pub const fn size(&self) -> usize {
         self.items.len()
     }
 
     /// Returns true, if the grid is empty, else false
     #[must_use]
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.items.is_empty()
     }
 
@@ -328,7 +332,7 @@ where
                 let items = into_iterator.into_iter().collect::<Vec<_>>();
 
                 if items.len() % width == 0 {
-                    Ok(Self { width, items })
+                    Ok(Self::init(width, items))
                 } else {
                     Err(GridConstructionError::VecSizeNotMultipleOfWidth)
                 }
