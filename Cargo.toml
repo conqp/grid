@@ -2,6 +2,7 @@
 name = "grid2d"
 authors = ["Richard Neumann <mail@richard-neumann.de>"]
 description = "Two dimensional grid of runtime-defined, but unchangable size"
+license = "MIT"
 license-file = "LICENSE"
 homepage = "https://github.com/conqp/grid/"
 repository = "https://github.com/conqp/grid/"
@@ -9,7 +10,7 @@ readme = "README.md"
 documentation = "https://docs.rs/grid2d"
 keywords = [ "2D", "array", "matrix", "data-structure"]
 categories = ["data-structures"]
-version = "0.3.3"
+version = "0.3.4"
 edition = "2021"
 
 [dependencies]
