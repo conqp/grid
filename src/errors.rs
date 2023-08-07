@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::num::ParseIntError;
 
@@ -14,6 +15,15 @@ impl Display for CoordinateParseError {
             Self::NotTwoNumbers => write!(f, "not two numbers"),
             Self::InvalidXValue(error) => write!(f, "invalid x value: {error}"),
             Self::InvalidYValue(error) => write!(f, "invalid y value: {error}"),
+        }
+    }
+}
+
+impl Error for CoordinateParseError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            Self::NotTwoNumbers => None,
+            Self::InvalidXValue(error) | Self::InvalidYValue(error) => Some(error),
         }
     }
 }
@@ -36,3 +46,5 @@ impl Display for GridConstructionError {
         )
     }
 }
+
+impl Error for GridConstructionError {}
