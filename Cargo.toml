@@ -10,7 +10,7 @@ readme = "README.md"
 documentation = "https://docs.rs/grid2d"
 keywords = [ "2D", "array", "matrix", "data-structure"]
 categories = ["data-structures"]
-version = "0.3.4"
+version = "0.3.5"
 edition = "2021"
 
 [dependencies]
