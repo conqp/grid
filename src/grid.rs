@@ -90,8 +90,13 @@ impl<T> Grid<T> {
     /// let grid = Grid::try_from(("Hello world!".chars(), 4)).unwrap();
     /// assert_eq!(grid.get((0, 2)).unwrap(), &'r');
     /// ```
+    #[inline]
     pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
-        self.items.get(coordinate.into().to_index(self.width))
+        self._get(coordinate.into())
+    }
+
+    fn _get(&self, coordinate: Coordinate) -> Option<&T> {
+        self.items.get(coordinate.to_index(self.width))
     }
 
     /// Returns an Option to a mutable reference of the cell content at the given coordinate
@@ -100,8 +105,13 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate of the cell
     ///
+    #[inline]
     pub fn get_mut(&mut self, coordinate: impl Into<Coordinate>) -> Option<&mut T> {
-        self.items.get_mut(coordinate.into().to_index(self.width))
+        self._get_mut(coordinate.into())
+    }
+
+    fn _get_mut(&mut self, coordinate: Coordinate) -> Option<&mut T> {
+        self.items.get_mut(coordinate.to_index(self.width))
     }
 
     /// Yields references to the grid's items
@@ -200,11 +210,15 @@ impl<T> Grid<T> {
     /// assert_eq!(grid.neighbors(Coordinate::new(2, 2)).count(), 5);
     /// assert_eq!(grid.neighbors(Coordinate::new(2, 3)).count(), 3);
     /// ```
+    #[inline]
     pub fn neighbors(
         &self,
         coordinate: impl Into<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &T)> {
-        let neighbors = self.neighbor_coordinates(coordinate);
+        self._neighbors(self.neighbor_coordinates(coordinate))
+    }
+
+    fn _neighbors(&self, neighbors: Vec<Coordinate>) -> impl Iterator<Item = (Coordinate, &T)> {
         self.enumerate()
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
@@ -215,11 +229,18 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate whose neighbors shall be yielded
     ///
+    #[inline]
     pub fn neighbors_mut(
         &mut self,
         coordinate: impl Into<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &mut T)> {
-        let neighbors = self.neighbor_coordinates(coordinate);
+        self._neighbors_mut(self.neighbor_coordinates(coordinate))
+    }
+
+    fn _neighbors_mut(
+        &mut self,
+        neighbors: Vec<Coordinate>,
+    ) -> impl Iterator<Item = (Coordinate, &mut T)> {
         self.enumerate_mut()
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
@@ -239,9 +260,13 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate whose neighbors shall be yielded
     ///
+    #[inline]
     pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
+        self._neighbor_coordinates(coordinate.into())
+    }
+
+    fn _neighbor_coordinates(&self, coordinate: Coordinate) -> Vec<Coordinate> {
         coordinate
-            .into()
             .neighbors()
             .filter(|coordinate| self.encompasses(*coordinate))
             .collect()
@@ -253,8 +278,12 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate which is to be tested
     ///
+    #[inline]
     pub fn encompasses(&self, coordinate: impl Into<Coordinate>) -> bool {
-        let coordinate = coordinate.into();
+        self._encompasses(coordinate.into())
+    }
+
+    const fn _encompasses(&self, coordinate: Coordinate) -> bool {
         coordinate.x() < self.width && coordinate.y() < self.height()
     }
 }
