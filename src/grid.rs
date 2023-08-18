@@ -36,7 +36,9 @@ impl<T> Grid<T> {
     /// assert_eq!(Grid::new(0, 3, String::new).width(), 0);
     /// ```
     pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
-        Self::init(width, (0..width * height).map(|_| initializer()).collect())
+        let mut items = Vec::with_capacity(width * height);
+        (0..width * height).for_each(|_| items.push(initializer()));
+        Self::init(width, items)
     }
 
     fn init(width: usize, items: Vec<T>) -> Self {
