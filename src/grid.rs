@@ -1,6 +1,5 @@
 use crate::coordinate::Coordinate;
 use crate::errors::GridConstructionError;
-use std::fmt::{Display, Formatter};
 
 /// A two-dimensional grid of arbitrary cell content
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -320,22 +319,6 @@ where
     }
 }
 
-#[cfg(feature = "itertools")]
-impl<T> Display for Grid<T>
-where
-    T: Display,
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        use itertools::Itertools;
-
-        for row in self.rows() {
-            writeln!(f, "{}", row.iter().join("\t"))?;
-        }
-
-        Ok(())
-    }
-}
-
 /// Create a Grid from a tuple of an iterable and the desired width.
 ///
 /// # Examples
@@ -370,6 +353,25 @@ where
                     Err(GridConstructionError::VecSizeNotMultipleOfWidth)
                 }
             }
+        }
+    }
+}
+
+#[cfg(feature = "display")]
+mod display {
+    use itertools::Itertools;
+    use std::fmt::{Display, Formatter};
+
+    impl<T> Display for super::Grid<T>
+    where
+        T: Display,
+    {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            for row in self.rows() {
+                writeln!(f, "{}", row.iter().join("\t"))?;
+            }
+
+            Ok(())
         }
     }
 }
