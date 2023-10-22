@@ -1,6 +1,5 @@
 use crate::coordinate::Coordinate;
 use crate::errors::GridConstructionError;
-use itertools::Itertools;
 use std::fmt::{Display, Formatter};
 
 /// A two-dimensional grid of arbitrary cell content
@@ -321,11 +320,14 @@ where
     }
 }
 
+#[cfg(feature = "itertools")]
 impl<T> Display for Grid<T>
 where
     T: Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        use itertools::Itertools;
+
         for row in self.rows() {
             writeln!(f, "{}", row.iter().join("\t"))?;
         }
