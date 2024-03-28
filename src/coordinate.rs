@@ -137,6 +137,7 @@ impl std::str::FromStr for Coordinate {
     }
 }
 
+#[cfg(feature = "display")]
 impl std::fmt::Display for Coordinate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}x{}", self.0, self.1)
