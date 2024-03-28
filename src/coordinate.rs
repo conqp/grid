@@ -211,16 +211,26 @@ impl From<&Coordinate> for (usize, usize) {
     }
 }
 
+/// Create a `Coordinate` from a `(&str, &str)` tuple.
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// let coordinate = Coordinate::try_from(("32", "1337"));
+/// assert_eq!(Ok(Coordinate::new(32, 1337)), coordinate);
+/// ```
 impl TryFrom<(&str, &str)> for Coordinate {
     type Error = CoordinateParseError;
 
     fn try_from((x, y): (&str, &str)) -> Result<Self, Self::Error> {
-        match x.parse::<usize>() {
-            Ok(x) => match y.parse::<usize>() {
-                Ok(y) => Ok(Self::new(x, y)),
-                Err(error) => Err(CoordinateParseError::InvalidYValue(error)),
-            },
-            Err(error) => Err(CoordinateParseError::InvalidXValue(error)),
-        }
+        x.parse::<usize>()
+            .map_err(CoordinateParseError::InvalidXValue)
+            .and_then(|x| {
+                y.parse::<usize>()
+                    .map_err(CoordinateParseError::InvalidYValue)
+                    .map(|y| Self::new(x, y))
+            })
     }
 }
