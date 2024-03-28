@@ -173,7 +173,7 @@ impl<T> Grid<T> {
     ///
     /// # Arguments
     ///
-    /// * `coordinate` - The coordinate who's neighbors shall be yielded
+    /// * `coordinate` - The coordinate whose neighbors shall be yielded
     ///
     /// # Examples
     ///
