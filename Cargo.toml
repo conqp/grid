@@ -7,13 +7,13 @@ homepage = "https://github.com/conqp/grid/"
 repository = "https://github.com/conqp/grid/"
 readme = "README.md"
 documentation = "https://docs.rs/grid2d"
-keywords = [ "two-dimensional", "array", "matrix", "data-structure"]
+keywords = ["two-dimensional", "array", "matrix", "data-structure"]
 categories = ["data-structures"]
 version = "0.3.8"
 edition = "2021"
 
 [dependencies]
-itertools = { version = "0.12.1", optional = true }
+itertools = { version = "0.13", optional = true }
 
 [features]
 display = ["itertools/default"]
