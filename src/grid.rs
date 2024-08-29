@@ -2,7 +2,7 @@ use crate::coordinate::Coordinate;
 use crate::errors::GridConstructionError;
 
 /// A two-dimensional grid of arbitrary cell content
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Grid<T> {
     width: usize,
     items: Box<[T]>,
