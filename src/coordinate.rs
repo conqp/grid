@@ -65,8 +65,10 @@ impl Coordinate {
     /// * `width` - The width of the grid
     ///
     #[must_use]
-    pub const fn to_index(&self, width: usize) -> usize {
-        self.y * width + self.x
+    pub fn to_index(&self, width: usize) -> Option<usize> {
+        self.y
+            .checked_mul(width)
+            .and_then(|row| row.checked_add(self.x))
     }
 
     /// Returns all potential neighboring coordinates
