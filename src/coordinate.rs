@@ -19,7 +19,7 @@ const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
     (0, 1),
     (1, 1),
 ];
-const SUPPORTED_SEPARATORS: [char; 3] = [',', 'x', ' '];
+const SUPPORTED_SEPARATORS: [char; 3] = ['x', ',', ' '];
 
 impl Coordinate {
     /// Creates a new coordinate
