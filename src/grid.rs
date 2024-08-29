@@ -359,8 +359,9 @@ where
 
 #[cfg(feature = "display")]
 mod display {
-    use itertools::Itertools;
     use std::fmt::{Display, Formatter};
+
+    use itertools::Itertools;
 
     impl<T> Display for super::Grid<T>
     where

@@ -1,5 +1,6 @@
-use crate::errors::CoordinateParseError;
 use std::ops::Add;
+
+use crate::errors::CoordinateParseError;
 
 /// Coordinate of a cell on a two-dimensional grid
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
