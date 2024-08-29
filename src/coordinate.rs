@@ -66,7 +66,7 @@ impl Coordinate {
     /// * `width` - The width of the grid
     ///
     #[must_use]
-    pub fn to_index(&self, width: usize) -> Option<usize> {
+    pub fn as_index(&self, width: usize) -> Option<usize> {
         self.y
             .checked_mul(width)
             .and_then(|row| row.checked_add(self.x))

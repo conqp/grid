@@ -95,7 +95,7 @@ impl<T> Grid<T> {
     pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
         coordinate
             .into()
-            .to_index(self.width)
+            .as_index(self.width)
             .and_then(|index| self.items.get(index))
     }
 
@@ -109,7 +109,7 @@ impl<T> Grid<T> {
     pub fn get_mut(&mut self, coordinate: impl Into<Coordinate>) -> Option<&mut T> {
         coordinate
             .into()
-            .to_index(self.width)
+            .as_index(self.width)
             .and_then(|index| self.items.get_mut(index))
     }
 
@@ -250,7 +250,7 @@ impl<T> Grid<T> {
             (0..self.width)
                 .filter_map(|x| {
                     Coordinate::new(x, y)
-                        .to_index(self.width)
+                        .as_index(self.width)
                         .map(|index| &self.items[index])
                 })
                 .collect()
