@@ -97,7 +97,9 @@ impl<T> Grid<T> {
     }
 
     fn _get(&self, coordinate: Coordinate) -> Option<&T> {
-        self.items.get(coordinate.to_index(self.width))
+        coordinate
+            .to_index(self.width)
+            .and_then(|index| self.items.get(index))
     }
 
     /// Returns an Option to a mutable reference of the cell content at the given coordinate
@@ -112,7 +114,9 @@ impl<T> Grid<T> {
     }
 
     fn _get_mut(&mut self, coordinate: Coordinate) -> Option<&mut T> {
-        self.items.get_mut(coordinate.to_index(self.width))
+        coordinate
+            .to_index(self.width)
+            .and_then(|index| self.items.get_mut(index))
     }
 
     /// Yields references to the grid's items
@@ -250,7 +254,11 @@ impl<T> Grid<T> {
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
         (0..self.height()).map(|y| {
             (0..self.width)
-                .map(|x| &self.items[Coordinate::new(x, y).to_index(self.width)])
+                .filter_map(|x| {
+                    Coordinate::new(x, y)
+                        .to_index(self.width)
+                        .map(|index| &self.items[index])
+                })
                 .collect()
         })
     }
