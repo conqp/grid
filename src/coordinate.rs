@@ -83,10 +83,11 @@ impl Add<&(isize, isize)> for &Coordinate {
     type Output = Option<Coordinate>;
 
     fn add(self, (dx, dy): &(isize, isize)) -> Self::Output {
-        Some(Coordinate::new(
-            self.x.checked_add_signed(*dx)?,
-            self.y.checked_add_signed(*dy)?,
-        ))
+        self.x.checked_add_signed(*dx).and_then(|x| {
+            self.y
+                .checked_add_signed(*dy)
+                .map(|y| Coordinate::new(x, y))
+        })
     }
 }
 
