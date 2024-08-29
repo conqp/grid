@@ -3,7 +3,10 @@ use std::ops::Add;
 
 /// Coordinate of a cell on a two-dimensional grid
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub struct Coordinate(usize, usize);
+pub struct Coordinate {
+    x: usize,
+    y: usize,
+}
 
 const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
     (-1, -1),
@@ -28,7 +31,7 @@ impl Coordinate {
     ///
     #[must_use]
     pub const fn new(x: usize, y: usize) -> Self {
-        Self(x, y)
+        Self { x, y }
     }
 
     /// Creates a coordinate from a grid's width and a total index
@@ -47,13 +50,13 @@ impl Coordinate {
     /// Returns the x component
     #[must_use]
     pub const fn x(&self) -> usize {
-        self.0
+        self.x
     }
 
     /// Returns the y component
     #[must_use]
     pub const fn y(&self) -> usize {
-        self.1
+        self.y
     }
 
     /// Converts the coordinate into a linear index
@@ -63,7 +66,7 @@ impl Coordinate {
     ///
     #[must_use]
     pub const fn to_index(&self, width: usize) -> usize {
-        self.1 * width + self.0
+        self.y * width + self.x
     }
 
     /// Returns all potential neighboring coordinates
@@ -79,8 +82,8 @@ impl Add<&(isize, isize)> for &Coordinate {
 
     fn add(self, (dx, dy): &(isize, isize)) -> Self::Output {
         Some(Coordinate::new(
-            self.0.checked_add_signed(*dx)?,
-            self.1.checked_add_signed(*dy)?,
+            self.x.checked_add_signed(*dx)?,
+            self.y.checked_add_signed(*dy)?,
         ))
     }
 }
@@ -140,7 +143,7 @@ impl std::str::FromStr for Coordinate {
 #[cfg(feature = "display")]
 impl std::fmt::Display for Coordinate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}x{}", self.0, self.1)
+        write!(f, "{}x{}", self.x, self.y)
     }
 }
 
@@ -192,7 +195,7 @@ impl From<&(usize, usize)> for Coordinate {
 /// ```
 impl From<Coordinate> for (usize, usize) {
     fn from(coordinate: Coordinate) -> Self {
-        (coordinate.0, coordinate.1)
+        (coordinate.x, coordinate.y)
     }
 }
 
@@ -208,7 +211,7 @@ impl From<Coordinate> for (usize, usize) {
 /// ```
 impl From<&Coordinate> for (usize, usize) {
     fn from(coordinate: &Coordinate) -> Self {
-        (coordinate.0, coordinate.1)
+        (coordinate.x, coordinate.y)
     }
 }
 
