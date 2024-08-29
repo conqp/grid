@@ -93,11 +93,8 @@ impl<T> Grid<T> {
     /// ```
     #[inline]
     pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
-        self._get(coordinate.into())
-    }
-
-    fn _get(&self, coordinate: Coordinate) -> Option<&T> {
         coordinate
+            .into()
             .to_index(self.width)
             .and_then(|index| self.items.get(index))
     }
@@ -110,11 +107,8 @@ impl<T> Grid<T> {
     ///
     #[inline]
     pub fn get_mut(&mut self, coordinate: impl Into<Coordinate>) -> Option<&mut T> {
-        self._get_mut(coordinate.into())
-    }
-
-    fn _get_mut(&mut self, coordinate: Coordinate) -> Option<&mut T> {
         coordinate
+            .into()
             .to_index(self.width)
             .and_then(|index| self.items.get_mut(index))
     }
@@ -271,11 +265,8 @@ impl<T> Grid<T> {
     ///
     #[inline]
     pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
-        self._neighbor_coordinates(coordinate.into())
-    }
-
-    fn _neighbor_coordinates(&self, coordinate: Coordinate) -> Vec<Coordinate> {
         coordinate
+            .into()
             .neighbors()
             .filter(|coordinate| self.encompasses(*coordinate))
             .collect()
