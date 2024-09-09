@@ -312,7 +312,7 @@ where
     ///
     /// # Arguments
     ///
-    /// * `item` - The coordinate which is to be tested
+    /// * `element` - The element which is to be tested
     ///
     pub fn contains(&self, element: &T) -> bool {
         self.items.contains(element)
