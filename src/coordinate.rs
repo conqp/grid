@@ -92,7 +92,7 @@ impl Add<&(isize, isize)> for &Coordinate {
     }
 }
 
-/// Create a Coordinate from a &str
+/// Create a Coordinate from a `&str`
 ///
 /// # Examples
 ///
@@ -157,7 +157,7 @@ impl From<&Self> for Coordinate {
     }
 }
 
-/// Create a coordinate from a (usize, usize) tuple
+/// Create a coordinate from a `(usize, usize)` tuple
 ///
 /// # Examples
 ///
@@ -172,7 +172,7 @@ impl From<(usize, usize)> for Coordinate {
     }
 }
 
-/// Create a Coordinate from a reference to a (usize, usize) tuple
+/// Create a Coordinate from a reference to a `(usize, usize)` tuple
 ///
 /// # Examples
 ///
@@ -217,7 +217,7 @@ impl From<&[usize; 2]> for Coordinate {
     }
 }
 
-/// Create a (usize, usize) tuple tuple from a Coordinate
+/// Create a `(usize, usize)` tuple tuple from a Coordinate
 ///
 /// # Examples
 ///
@@ -233,7 +233,7 @@ impl From<Coordinate> for (usize, usize) {
     }
 }
 
-/// Create a (usize, usize) tuple from a Coordinate reference
+/// Create a `(usize, usize)` tuple from a Coordinate reference
 ///
 /// # Examples
 ///
