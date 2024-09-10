@@ -187,6 +187,36 @@ impl From<&(usize, usize)> for Coordinate {
     }
 }
 
+/// Create a coordinate from a `[usize; 2]`
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// assert_eq!(Coordinate::new(32, 1337), [32, 1337].into());
+/// ```
+impl From<[usize; 2]> for Coordinate {
+    fn from([x, y]: [usize; 2]) -> Self {
+        Self::new(x, y)
+    }
+}
+
+/// Create a Coordinate from a reference to a `[usize; 2]`
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// assert_eq!(Coordinate::new(32, 1337), (&[32, 1337]).into());
+/// ```
+impl From<&[usize; 2]> for Coordinate {
+    fn from([x, y]: &[usize; 2]) -> Self {
+        Self::new(*x, *y)
+    }
+}
+
 /// Create a (usize, usize) tuple tuple from a Coordinate
 ///
 /// # Examples
@@ -216,6 +246,38 @@ impl From<Coordinate> for (usize, usize) {
 impl From<&Coordinate> for (usize, usize) {
     fn from(coordinate: &Coordinate) -> Self {
         (coordinate.x, coordinate.y)
+    }
+}
+
+/// Create a `[usize; 2]` array tuple from a Coordinate
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// let [x, y] = Coordinate::new(32, 1337).into();
+/// assert_eq!((32, 1337), (x, y));
+/// ```
+impl From<Coordinate> for [usize; 2] {
+    fn from(coordinate: Coordinate) -> Self {
+        [coordinate.x, coordinate.y]
+    }
+}
+
+/// Create a `[usize; 2]` array from a Coordinate reference
+///
+/// # Examples
+///
+/// ```
+/// use grid2d::Coordinate;
+///
+/// let [x, y] = (&Coordinate::new(32, 1337)).into();
+/// assert_eq!((32, 1337), (x, y));
+/// ```
+impl From<&Coordinate> for [usize; 2] {
+    fn from(coordinate: &Coordinate) -> Self {
+        [coordinate.x, coordinate.y]
     }
 }
 
