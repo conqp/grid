@@ -1,5 +1,5 @@
-use crate::coordinate::Coordinate;
-use crate::errors::GridConstructionError;
+use crate::Coordinate;
+use crate::GridConstructionError;
 
 /// A two-dimensional grid of arbitrary cell content
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
