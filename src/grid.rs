@@ -75,7 +75,7 @@ impl<T> Grid<T> {
         let size: usize = width.checked_mul(height)?.into();
         let mut items = Vec::with_capacity(size);
         (0..size).for_each(|_| items.push(initializer()));
-        // SAFETY: We perform checked multiplication to ensure  that
+        // SAFETY: We perform checked multiplication to ensure that
         // `items.len()` is a multiple of `width`.
         Some(unsafe { Self::new_unchecked(width, items) })
     }
