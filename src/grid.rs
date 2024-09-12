@@ -18,6 +18,9 @@ impl<T> Grid<T> {
     /// * `height` - The height of the grid
     /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
     ///
+    /// # Panics
+    /// This function may panic if the grid size is too lange to fit into a `usize`.
+    ///
     /// # Examples
     ///
     /// ```
@@ -33,13 +36,58 @@ impl<T> Grid<T> {
     /// assert_eq!(grid.size(), width.checked_mul(height).unwrap().into());
     /// ```
     pub fn new(width: NonZero<usize>, height: NonZero<usize>, initializer: impl Fn() -> T) -> Self {
-        let size: usize = width.saturating_mul(height).into();
-        let mut items = Vec::with_capacity(size);
-        (0..size).for_each(|_| items.push(initializer()));
-        Self::init(width, items)
+        Self::try_new(width, height, initializer).expect("grid too large")
     }
 
-    fn init(width: NonZero<usize>, items: Vec<T>) -> Self {
+    /// Returns a new instance of Grid
+    ///
+    /// # Arguments
+    ///
+    /// * `width` - The width of the grid
+    /// * `height` - The height of the grid
+    /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
+    ///
+    /// # Panics
+    ///
+    /// This function may panic if the grid size is too lange to fit into a `usize`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::num::NonZero;
+    /// use grid2d::Grid;
+    ///
+    /// let width = NonZero::new(42).unwrap();
+    /// let height = NonZero::new(1337).unwrap();
+    /// let grid = Grid::try_new(width, height, String::new);
+    /// assert!(grid.is_some());
+    ///
+    /// let width = NonZero::new(usize::MAX).unwrap();
+    /// let height = NonZero::new(usize::MAX).unwrap();
+    /// let grid = Grid::try_new(width, height, String::new);
+    /// assert!(grid.is_none());
+    /// ```
+    pub fn try_new(
+        width: NonZero<usize>,
+        height: NonZero<usize>,
+        initializer: impl Fn() -> T,
+    ) -> Option<Self> {
+        let size: usize = width.checked_mul(height)?.into();
+        let mut items = Vec::with_capacity(size);
+        (0..size).for_each(|_| items.push(initializer()));
+        // SAFETY: We perform checked multiplication to ensure  that
+        // `items.len()` is a multiple of `width`.
+        Some(unsafe { Self::new_unchecked(width, items) })
+    }
+
+    /// Creates a new grid without checking whether the amount of items is a multiple of width.
+    ///
+    /// # Safety
+    ///
+    /// Calling this method without `items.len()` being a multiple of `width`
+    /// will result in undefined behavior of the Grid.
+    #[must_use]
+    pub unsafe fn new_unchecked(width: NonZero<usize>, items: Vec<T>) -> Self {
         Self {
             width,
             items: items.into_boxed_slice(),
@@ -64,8 +112,8 @@ impl<T> Grid<T> {
     /// This is equal to `grid.width() * grid.height()`
     #[must_use]
     pub const fn size(&self) -> NonZero<usize> {
-        // SAFETY: We never allow to construct a Grid with width or height zero.
-        // Additionally, we always perform saturating multiplication.
+        // SAFETY: We never allow to construct a `Grid` with `width` or height `zero`.
+        // Additionally, we perform checked multiplication when constructing a `Grid`.
         // Thus, a Grid can never have a size of zero.
         unsafe { NonZero::new_unchecked(self.items.len()) }
     }
@@ -357,7 +405,8 @@ where
         let items = into_iterator.into_iter().collect::<Vec<_>>();
 
         if items.len() % width == 0 {
-            Ok(Self::init(width, items))
+            // SAFETY: In the line above, we checked that `items.len()` is a multiple of `width`.
+            Ok(unsafe { Self::new_unchecked(width, items) })
         } else {
             Err(GridConstructionError::VecSizeNotMultipleOfWidth)
         }
