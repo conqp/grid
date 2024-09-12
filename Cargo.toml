@@ -10,7 +10,7 @@ documentation = "https://docs.rs/grid2d"
 keywords = ["two-dimensional", "array", "matrix", "data-structure"]
 categories = ["data-structures"]
 exclude = [".gitignore"]
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 
 [dependencies]
