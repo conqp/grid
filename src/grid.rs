@@ -32,8 +32,8 @@ impl<T> Grid<T> {
     /// let grid = Grid::new(width, height, String::new);
     ///
     /// assert_eq!(grid.width(), width);
-    /// assert_eq!(grid.height(), height.into());
-    /// assert_eq!(grid.size(), width.checked_mul(height).unwrap().into());
+    /// assert_eq!(grid.height(), height);
+    /// assert_eq!(grid.size(), width.checked_mul(height).unwrap());
     /// ```
     pub fn new(width: NonZero<usize>, height: NonZero<usize>, initializer: impl Fn() -> T) -> Self {
         Self::try_new(width, height, initializer).expect("grid too large")
@@ -72,7 +72,7 @@ impl<T> Grid<T> {
         height: NonZero<usize>,
         initializer: impl Fn() -> T,
     ) -> Option<Self> {
-        let size: usize = width.checked_mul(height)?.into();
+        let size: usize = width.checked_mul(height)?.get();
         let mut items = Vec::with_capacity(size);
         (0..size).for_each(|_| items.push(initializer()));
         // SAFETY: We perform checked multiplication to ensure that
@@ -104,7 +104,7 @@ impl<T> Grid<T> {
     #[must_use]
     pub fn height(&self) -> NonZero<usize> {
         // SAFETY: Both `width` and `height` are always a non-zero multiple of the Grid's size.
-        unsafe { NonZero::new_unchecked(usize::from(self.size()) / self.width) }
+        unsafe { NonZero::new_unchecked(self.size().get() / self.width) }
     }
 
     /// Returns the size of the grid
@@ -301,8 +301,8 @@ impl<T> Grid<T> {
 
     /// Yields the rows of the grid
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
-        (0..self.height().into()).map(|y| {
-            (0..self.width.into())
+        (0..self.height().get()).map(|y| {
+            (0..self.width.get())
                 .filter_map(|x| {
                     Coordinate::new(x, y)
                         .as_index(self.width)
@@ -339,7 +339,7 @@ impl<T> Grid<T> {
     }
 
     fn _encompasses(&self, coordinate: Coordinate) -> bool {
-        coordinate.x() < self.width.into() && coordinate.y() < self.height().into()
+        coordinate.x() < self.width.get() && coordinate.y() < self.height().get()
     }
 }
 
