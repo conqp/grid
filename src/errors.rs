@@ -30,7 +30,6 @@ impl Error for CoordinateParseError {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum GridConstructionError {
-    ZeroSize,
     VecSizeNotMultipleOfWidth,
 }
 
@@ -40,7 +39,6 @@ impl Display for GridConstructionError {
             f,
             "{}",
             match self {
-                Self::ZeroSize => "width must not be zero",
                 Self::VecSizeNotMultipleOfWidth => "vec size must be a multiple of width",
             }
         )

@@ -1,10 +1,11 @@
 use crate::Coordinate;
 use crate::GridConstructionError;
+use std::num::NonZero;
 
 /// A two-dimensional grid of arbitrary cell content
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Grid<T> {
-    width: usize,
+    width: NonZero<usize>,
     items: Box<[T]>,
 }
 
@@ -20,27 +21,25 @@ impl<T> Grid<T> {
     /// # Examples
     ///
     /// ```
+    /// use std::num::NonZero;
     /// use grid2d::Grid;
     ///
-    /// let width = 42;
-    /// let height = 1337;
+    /// let width = NonZero::new(42).unwrap();
+    /// let height = NonZero::new(1337).unwrap();
     /// let grid = Grid::new(width, height, String::new);
     ///
     /// assert_eq!(grid.width(), width);
-    /// assert_eq!(grid.height(), height);
-    /// assert_eq!(grid.size(), width * height);
-    ///
-    /// assert_eq!(Grid::new(2, 0, String::new).height(), 0);
-    /// assert_eq!(Grid::new(0, 3, String::new).width(), 0);
+    /// assert_eq!(grid.height(), height.into());
+    /// assert_eq!(grid.size(), width.checked_mul(height).unwrap().into());
     /// ```
-    pub fn new(width: usize, height: usize, initializer: impl Fn() -> T) -> Self {
-        let size = width.saturating_mul(height);
+    pub fn new(width: NonZero<usize>, height: NonZero<usize>, initializer: impl Fn() -> T) -> Self {
+        let size: usize = width.saturating_mul(height).into();
         let mut items = Vec::with_capacity(size);
         (0..size).for_each(|_| items.push(initializer()));
         Self::init(width, items)
     }
 
-    fn init(width: usize, items: Vec<T>) -> Self {
+    fn init(width: NonZero<usize>, items: Vec<T>) -> Self {
         Self {
             width,
             items: items.into_boxed_slice(),
@@ -49,26 +48,26 @@ impl<T> Grid<T> {
 
     /// Returns the width of the grid
     #[must_use]
-    pub const fn width(&self) -> usize {
+    pub const fn width(&self) -> NonZero<usize> {
         self.width
     }
 
     /// Returns the height of the grid
     #[must_use]
-    pub const fn height(&self) -> usize {
-        if self.width == 0 {
-            0
-        } else {
-            self.size() / self.width
-        }
+    pub fn height(&self) -> NonZero<usize> {
+        // SAFETY: Both `width` and `height` are always a non-zero multiple of the Grid's size.
+        unsafe { NonZero::new_unchecked(usize::from(self.size()) / self.width) }
     }
 
     /// Returns the size of the grid
     ///
     /// This is equal to `grid.width() * grid.height()`
     #[must_use]
-    pub const fn size(&self) -> usize {
-        self.items.len()
+    pub const fn size(&self) -> NonZero<usize> {
+        // SAFETY: We never allow to construct a Grid with width or height zero.
+        // Additionally, we always perform saturating multiplication.
+        // Thus, a Grid can never have a size of zero.
+        unsafe { NonZero::new_unchecked(self.items.len()) }
     }
 
     /// Returns true, if the grid is empty, else false
@@ -86,9 +85,10 @@ impl<T> Grid<T> {
     /// # Examples
     ///
     /// ```
+    /// use std::num::NonZero;
     /// use grid2d::Grid;
     ///
-    /// let grid = Grid::try_from(("Hello world!".chars(), 4)).unwrap();
+    /// let grid = Grid::try_from(("Hello world!".chars(), NonZero::new(4).unwrap())).unwrap();
     /// assert_eq!(grid.get((0, 2)).unwrap(), &'r');
     /// ```
     #[inline]
@@ -127,8 +127,12 @@ impl<T> Grid<T> {
     /// # Examples
     ///
     /// ```
+    /// use std::num::NonZero;
     /// use grid2d::{Grid, Coordinate};
-    /// let mut grid = Grid::new(3, 4, String::new);
+    ///
+    /// let width = NonZero::new(3).unwrap();
+    /// let height = NonZero::new(4).unwrap();
+    /// let mut grid = Grid::new(width, height, String::new);
     /// let text = "Hello world!";
     ///
     /// for (index, item) in grid.iter_mut().enumerate() {
@@ -177,9 +181,12 @@ impl<T> Grid<T> {
     /// # Examples
     ///
     /// ```
+    /// use std::num::NonZero;
     /// use grid2d::{Grid, Coordinate};
     ///
-    /// let mut grid = Grid::new(3, 4, String::new);
+    /// let width = NonZero::new(3).unwrap();
+    /// let height = NonZero::new(4).unwrap();
+    /// let mut grid = Grid::new(width, height, String::new);
     /// let text = "Hello world!";
     /// let neighbors: [[&str; 3]; 4] = [
     ///     ["H", "e", "l"],
@@ -246,8 +253,8 @@ impl<T> Grid<T> {
 
     /// Yields the rows of the grid
     pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
-        (0..self.height()).map(|y| {
-            (0..self.width)
+        (0..self.height().into()).map(|y| {
+            (0..self.width.into())
                 .filter_map(|x| {
                     Coordinate::new(x, y)
                         .as_index(self.width)
@@ -283,8 +290,8 @@ impl<T> Grid<T> {
         self._encompasses(coordinate.into())
     }
 
-    const fn _encompasses(&self, coordinate: Coordinate) -> bool {
-        coordinate.x() < self.width && coordinate.y() < self.height()
+    fn _encompasses(&self, coordinate: Coordinate) -> bool {
+        coordinate.x() < self.width.into() && coordinate.y() < self.height().into()
     }
 }
 
@@ -299,7 +306,7 @@ where
     /// * `width` - The width of the grid
     /// * `height` - The height of the grid
     ///
-    pub fn new_default(width: usize, height: usize) -> Self {
+    pub fn new_default(width: NonZero<usize>, height: NonZero<usize>) -> Self {
         Self::new(width, height, T::default)
     }
 }
@@ -324,35 +331,35 @@ where
 /// # Examples
 ///
 /// ```
+/// use std::num::NonZero;
 /// use grid2d::{Grid, GridConstructionError};
 ///
 /// let items = vec![1, 2, 3, 4, 5, 6, 7, 8];
+/// let width = NonZero::new(4).unwrap();
 /// let items2 = [1, 2, 3, 4, 5, 6, 7, 8];
+/// let width2 = NonZero::new(3).unwrap();
 ///
-/// assert!(Grid::try_from((items.clone(), 4)).is_ok());
-/// assert!(Grid::try_from((items.clone().iter(), 4)).is_ok());
-/// assert!(Grid::try_from((items2, 4)).is_ok());
-/// assert_eq!( Grid::try_from((items.clone(), 3)).err(), Some(GridConstructionError::VecSizeNotMultipleOfWidth));
-/// assert_eq!(Grid::try_from((items.clone(), 0)).err(), Some(GridConstructionError::ZeroSize));
+/// assert!(Grid::try_from((items.clone(), width)).is_ok());
+/// assert!(Grid::try_from((items.clone().iter(), width)).is_ok());
+/// assert!(Grid::try_from((items2, width)).is_ok());
+/// assert_eq!(
+///     Grid::try_from((items.clone(), width2)),
+///     Err(GridConstructionError::VecSizeNotMultipleOfWidth)
+/// );
 /// ```
-impl<T> TryFrom<(T, usize)> for Grid<T::Item>
+impl<T> TryFrom<(T, NonZero<usize>)> for Grid<T::Item>
 where
     T: IntoIterator,
 {
     type Error = GridConstructionError;
 
-    fn try_from((into_iterator, width): (T, usize)) -> Result<Self, Self::Error> {
-        match width {
-            0 => Err(GridConstructionError::ZeroSize),
-            width => {
-                let items = into_iterator.into_iter().collect::<Vec<_>>();
+    fn try_from((into_iterator, width): (T, NonZero<usize>)) -> Result<Self, Self::Error> {
+        let items = into_iterator.into_iter().collect::<Vec<_>>();
 
-                if items.len() % width == 0 {
-                    Ok(Self::init(width, items))
-                } else {
-                    Err(GridConstructionError::VecSizeNotMultipleOfWidth)
-                }
-            }
+        if items.len() % width == 0 {
+            Ok(Self::init(width, items))
+        } else {
+            Err(GridConstructionError::VecSizeNotMultipleOfWidth)
         }
     }
 }

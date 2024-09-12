@@ -1,3 +1,4 @@
+use std::num::NonZero;
 use std::ops::Add;
 
 use crate::CoordinateParseError;
@@ -43,7 +44,7 @@ impl Coordinate {
     /// * `index` - The index of the cell
     ///
     #[must_use]
-    pub const fn from_width_and_index(width: usize, index: usize) -> Self {
+    pub fn from_width_and_index(width: NonZero<usize>, index: usize) -> Self {
         let x = index % width;
         Self::new(x, (index - x) / width)
     }
@@ -66,9 +67,9 @@ impl Coordinate {
     /// * `width` - The width of the grid
     ///
     #[must_use]
-    pub fn as_index(&self, width: usize) -> Option<usize> {
+    pub fn as_index(&self, width: NonZero<usize>) -> Option<usize> {
         self.y
-            .checked_mul(width)
+            .checked_mul(width.into())
             .and_then(|row| row.checked_add(self.x))
     }
 
