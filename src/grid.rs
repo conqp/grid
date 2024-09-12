@@ -84,7 +84,7 @@ impl<T> Grid<T> {
     ///
     /// # Safety
     ///
-    /// Calling this method without `items.len()` being a multiple of `width`
+    /// Calling this method without `items.len()` being a non-zero multiple of `width`
     /// will result in undefined behavior of the Grid.
     #[must_use]
     pub unsafe fn new_unchecked(width: NonZero<usize>, items: Vec<T>) -> Self {
