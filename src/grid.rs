@@ -75,6 +75,7 @@ impl<T> Grid<T> {
         let size: usize = width.checked_mul(height)?.get();
         let mut items = Vec::with_capacity(size);
         (0..size).for_each(|_| items.push(initializer()));
+        #[allow(unsafe_code)]
         // SAFETY: We perform checked multiplication to ensure that
         // `items.len()` is a multiple of `width`.
         Some(unsafe { Self::new_unchecked(width, items) })
@@ -86,6 +87,7 @@ impl<T> Grid<T> {
     ///
     /// Calling this method without `items.len()` being a non-zero multiple of `width`
     /// will result in undefined behavior of the Grid.
+    #[allow(unsafe_code)]
     #[must_use]
     pub unsafe fn new_unchecked(width: NonZero<usize>, items: Vec<T>) -> Self {
         Self {
@@ -103,8 +105,11 @@ impl<T> Grid<T> {
     /// Returns the height of the grid
     #[must_use]
     pub fn height(&self) -> NonZero<usize> {
+        #[allow(unsafe_code)]
         // SAFETY: Both `width` and `height` are always a non-zero multiple of the Grid's size.
-        unsafe { NonZero::new_unchecked(self.size().get() / self.width) }
+        unsafe {
+            NonZero::new_unchecked(self.size().get() / self.width)
+        }
     }
 
     /// Returns the size of the grid
@@ -112,10 +117,13 @@ impl<T> Grid<T> {
     /// This is equal to `grid.width() * grid.height()`
     #[must_use]
     pub const fn size(&self) -> NonZero<usize> {
+        #[allow(unsafe_code)]
         // SAFETY: We never allow to construct a `Grid` with `width` or height `zero`.
         // Additionally, we perform checked multiplication when constructing a `Grid`.
         // Thus, a Grid can never have a size of zero.
-        unsafe { NonZero::new_unchecked(self.items.len()) }
+        unsafe {
+            NonZero::new_unchecked(self.items.len())
+        }
     }
 
     /// Returns true, if the grid is empty, else false
@@ -405,6 +413,7 @@ where
         let items = into_iterator.into_iter().collect::<Vec<_>>();
 
         if items.len() % width == 0 {
+            #[allow(unsafe_code)]
             // SAFETY: In the line above, we checked that `items.len()` is a multiple of `width`.
             Ok(unsafe { Self::new_unchecked(width, items) })
         } else {
