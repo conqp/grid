@@ -2,10 +2,14 @@ use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::num::ParseIntError;
 
+/// Errors that can occur when parsing a coordinate from a string.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CoordinateParseError {
+    /// The string does not contain two numbers for x and y.
     NotTwoNumbers,
+    /// The value for the x coordinate is invalid.
     InvalidXValue(ParseIntError),
+    /// The value for the y coordinate is invalid.
     InvalidYValue(ParseIntError),
 }
 
