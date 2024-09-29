@@ -1,5 +1,4 @@
 use crate::Coordinate;
-use crate::GridConstructionError;
 use std::num::NonZero;
 
 /// A two-dimensional grid of arbitrary cell content
@@ -388,7 +387,7 @@ where
 ///
 /// ```
 /// use std::num::NonZero;
-/// use grid2d::{Grid, GridConstructionError};
+/// use grid2d::Grid;
 ///
 /// let items = vec![1, 2, 3, 4, 5, 6, 7, 8];
 /// let width = NonZero::new(4).unwrap();
@@ -400,14 +399,14 @@ where
 /// assert!(Grid::try_from((items2, width)).is_ok());
 /// assert_eq!(
 ///     Grid::try_from((items.clone(), width2)),
-///     Err(GridConstructionError::VecSizeNotMultipleOfWidth)
+///     Err(())
 /// );
 /// ```
 impl<T> TryFrom<(T, NonZero<usize>)> for Grid<T::Item>
 where
     T: IntoIterator,
 {
-    type Error = GridConstructionError;
+    type Error = ();
 
     fn try_from((into_iterator, width): (T, NonZero<usize>)) -> Result<Self, Self::Error> {
         let items = into_iterator.into_iter().collect::<Vec<_>>();
@@ -417,7 +416,7 @@ where
             // SAFETY: In the line above, we checked that `items.len()` is a multiple of `width`.
             Ok(unsafe { Self::new_unchecked(width, items) })
         } else {
-            Err(GridConstructionError::VecSizeNotMultipleOfWidth)
+            Err(())
         }
     }
 }

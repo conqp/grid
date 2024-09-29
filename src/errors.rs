@@ -31,24 +31,3 @@ impl Error for CoordinateParseError {
         }
     }
 }
-
-/// An error that can occur when constructing a Grid.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum GridConstructionError {
-    /// The size of the passed-in Vec is not a non-zero multiple of the grid's width.
-    VecSizeNotMultipleOfWidth,
-}
-
-impl Display for GridConstructionError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self {
-                Self::VecSizeNotMultipleOfWidth => "vec size must be a multiple of width",
-            }
-        )
-    }
-}
-
-impl Error for GridConstructionError {}
