@@ -32,8 +32,10 @@ impl Error for CoordinateParseError {
     }
 }
 
+/// An error that can occur when constructing a Grid.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum GridConstructionError {
+    /// The size of the passed-in Vec is not a non-zero multiple of the grid's width.
     VecSizeNotMultipleOfWidth,
 }
 
