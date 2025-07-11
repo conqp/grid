@@ -46,9 +46,9 @@ impl<T> Grid<T> {
     /// * `height` - The height of the grid
     /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
     ///
-    /// # Panics
+    /// # Errors
     ///
-    /// This function may panic if the grid size is too lange to fit into a `usize`.
+    /// This function returns `None` if the grid size is too lange to fit into a `usize`.
     ///
     /// # Examples
     ///
@@ -84,8 +84,7 @@ impl<T> Grid<T> {
     ///
     /// # Safety
     ///
-    /// Calling this method without `items.len()` being a non-zero multiple of `width`
-    /// will result in undefined behavior of the Grid.
+    /// The caller must guarantee that `items.len()` is a non-zero multiple of `width`.
     #[allow(unsafe_code)]
     #[must_use]
     pub unsafe fn new_unchecked(width: NonZero<usize>, items: Vec<T>) -> Self {
