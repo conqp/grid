@@ -14,7 +14,7 @@ version = "0.6.0"
 edition = "2021"
 
 [dependencies]
-itertools = { version = "0.13", optional = true }
+itertools = { version = "0.14", optional = true }
 
 [features]
 display = ["itertools/default"]
