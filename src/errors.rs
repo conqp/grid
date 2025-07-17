@@ -1,6 +1,6 @@
-use std::error::Error;
-use std::fmt::{Display, Formatter};
-use std::num::ParseIntError;
+use core::error::Error;
+use core::fmt::{self, Display, Formatter};
+use core::num::ParseIntError;
 
 /// Errors that can occur when parsing a coordinate from a string.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -14,7 +14,7 @@ pub enum CoordinateParseError {
 }
 
 impl Display for CoordinateParseError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             Self::NotTwoNumbers => write!(f, "not two numbers"),
             Self::InvalidXValue(error) => write!(f, "invalid x value: {error}"),

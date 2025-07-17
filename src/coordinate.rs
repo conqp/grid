@@ -1,5 +1,6 @@
-use std::num::NonZero;
-use std::ops::Add;
+use core::num::NonZero;
+use core::ops::Add;
+use core::str::FromStr;
 
 use crate::CoordinateParseError;
 
@@ -98,8 +99,8 @@ impl Add<&(isize, isize)> for &Coordinate {
 /// # Examples
 ///
 /// ```
-/// use std::num::IntErrorKind;
-/// use std::str::FromStr;
+/// use core::num::IntErrorKind;
+/// use core::str::FromStr;
 /// use grid2d::{Coordinate, CoordinateParseError};
 ///
 /// assert!(match Coordinate::from_str("-1 1").unwrap_err() {
@@ -131,7 +132,7 @@ impl Add<&(isize, isize)> for &Coordinate {
 /// assert_eq!(Coordinate::from_str("42x1337").ok(), Some(Coordinate::new(42, 1337)));
 /// assert_eq!(Coordinate::from_str("0, 0").ok(), Some(Coordinate::new(0, 0)));
 /// ```
-impl std::str::FromStr for Coordinate {
+impl FromStr for Coordinate {
     type Err = CoordinateParseError;
 
     fn from_str(string: &str) -> Result<Self, Self::Err> {
@@ -146,8 +147,8 @@ impl std::str::FromStr for Coordinate {
 }
 
 #[cfg(feature = "display")]
-impl std::fmt::Display for Coordinate {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl core::fmt::Display for Coordinate {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}x{}", self.x, self.y)
     }
 }

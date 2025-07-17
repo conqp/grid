@@ -1,5 +1,7 @@
 use crate::Coordinate;
-use std::num::NonZero;
+use alloc::boxed::Box;
+use alloc::vec::Vec;
+use core::num::NonZero;
 
 /// A two-dimensional grid of arbitrary cell content
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -422,15 +424,15 @@ where
 
 #[cfg(feature = "display")]
 mod display {
-    use std::fmt::{Display, Formatter};
-
+    use super::Grid;
+    use core::fmt::{self, Display, Formatter};
     use itertools::Itertools;
 
-    impl<T> Display for super::Grid<T>
+    impl<T> Display for Grid<T>
     where
         T: Display,
     {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
             for row in self.rows() {
                 writeln!(f, "{}", row.iter().join("\t"))?;
             }
