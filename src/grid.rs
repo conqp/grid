@@ -1,7 +1,8 @@
-use crate::Coordinate;
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 use core::num::NonZero;
+
+use crate::Coordinate;
 
 /// A two-dimensional grid of arbitrary cell content
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -427,9 +428,11 @@ where
 
 #[cfg(feature = "display")]
 mod display {
-    use super::Grid;
     use core::fmt::{self, Display, Formatter};
+
     use itertools::Itertools;
+
+    use super::Grid;
 
     impl<T> Display for Grid<T>
     where
