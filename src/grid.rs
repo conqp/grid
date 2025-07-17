@@ -277,10 +277,13 @@ impl<T> Grid<T> {
         &self,
         coordinate: impl Into<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &T)> {
-        self._neighbors(self.neighbor_coordinates(coordinate))
+        self.neighbors_internal(self.neighbor_coordinates(coordinate))
     }
 
-    fn _neighbors(&self, neighbors: Vec<Coordinate>) -> impl Iterator<Item = (Coordinate, &T)> {
+    fn neighbors_internal(
+        &self,
+        neighbors: Vec<Coordinate>,
+    ) -> impl Iterator<Item = (Coordinate, &T)> {
         self.enumerate()
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
@@ -296,10 +299,10 @@ impl<T> Grid<T> {
         &mut self,
         coordinate: impl Into<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &mut T)> {
-        self._neighbors_mut(self.neighbor_coordinates(coordinate))
+        self.neighbors_mut_internal(self.neighbor_coordinates(coordinate))
     }
 
-    fn _neighbors_mut(
+    fn neighbors_mut_internal(
         &mut self,
         neighbors: Vec<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &mut T)> {
@@ -343,10 +346,10 @@ impl<T> Grid<T> {
     ///
     #[inline]
     pub fn encompasses(&self, coordinate: impl Into<Coordinate>) -> bool {
-        self._encompasses(coordinate.into())
+        self.encompasses_internal(coordinate.into())
     }
 
-    fn _encompasses(&self, coordinate: Coordinate) -> bool {
+    fn encompasses_internal(&self, coordinate: Coordinate) -> bool {
         coordinate.x() < self.width.get() && coordinate.y() < self.height().get()
     }
 }
