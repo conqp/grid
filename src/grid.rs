@@ -1,8 +1,9 @@
 use alloc::boxed::Box;
 use alloc::vec::Vec;
+use core::borrow::Borrow;
 use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
-use core::ops::Index;
+use core::ops::{Deref, DerefMut, Index};
 
 use crate::Coordinate;
 
@@ -374,6 +375,38 @@ where
     /// Determines whether the grid contains the given element.
     pub fn contains(&self, element: &T) -> bool {
         self.items.contains(element)
+    }
+}
+
+impl<T> AsMut<[T]> for Grid<T> {
+    fn as_mut(&mut self) -> &mut [T] {
+        &mut self.items
+    }
+}
+
+impl<T> AsRef<[T]> for Grid<T> {
+    fn as_ref(&self) -> &[T] {
+        &self.items
+    }
+}
+
+impl<T> Borrow<[T]> for Grid<T> {
+    fn borrow(&self) -> &[T] {
+        &self.items
+    }
+}
+
+impl<T> Deref for Grid<T> {
+    type Target = [T];
+
+    fn deref(&self) -> &Self::Target {
+        &self.items
+    }
+}
+
+impl<T> DerefMut for Grid<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.items
     }
 }
 
