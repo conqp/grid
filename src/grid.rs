@@ -146,7 +146,22 @@ impl<T> Grid<T> {
     /// use grid2d::Grid;
     ///
     /// let grid = Grid::try_from(("Hello world!".chars(), NonZero::new(4).unwrap())).unwrap();
+    /// assert_eq!(grid.get((0, 0)).unwrap(), &'H');
+    /// assert_eq!(grid.get((1, 0)).unwrap(), &'e');
+    /// assert_eq!(grid.get((2, 0)).unwrap(), &'l');
+    /// assert_eq!(grid.get((3, 0)).unwrap(), &'l');
+    /// assert_eq!(grid.get((4, 0)), None);
+    /// assert_eq!(grid.get((0, 1)).unwrap(), &'o');
+    /// assert_eq!(grid.get((1, 1)).unwrap(), &' ');
+    /// assert_eq!(grid.get((2, 1)).unwrap(), &'w');
+    /// assert_eq!(grid.get((3, 1)).unwrap(), &'o');
+    /// assert_eq!(grid.get((4, 1)), None);
     /// assert_eq!(grid.get((0, 2)).unwrap(), &'r');
+    /// assert_eq!(grid.get((1, 2)).unwrap(), &'l');
+    /// assert_eq!(grid.get((2, 2)).unwrap(), &'d');
+    /// assert_eq!(grid.get((3, 2)).unwrap(), &'!');
+    /// assert_eq!(grid.get((4, 2)), None);
+    /// assert_eq!(grid.get((0, 3)), None);
     /// ```
     #[inline]
     pub fn get(&self, coordinate: impl Into<Coordinate>) -> Option<&T> {
