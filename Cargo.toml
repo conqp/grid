@@ -10,7 +10,7 @@ documentation = "https://docs.rs/grid2d"
 keywords = ["two-dimensional", "array", "matrix", "data-structure"]
 categories = ["data-structures"]
 exclude = [".gitignore"]
-version = "0.6.4"
+version = "1.0.0"
 edition = "2021"
 
 [lints.rust]
