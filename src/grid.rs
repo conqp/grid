@@ -5,7 +5,7 @@ use core::ops::Index;
 
 use crate::Coordinate;
 
-/// A two-dimensional grid of arbitrary cell content
+/// A two-dimensional grid of arbitrary cell content.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Grid<T> {
     width: NonZero<usize>,
@@ -13,7 +13,7 @@ pub struct Grid<T> {
 }
 
 impl<T> Grid<T> {
-    /// Returns a new instance of Grid
+    /// Returns a new instance of Grid.
     ///
     /// # Arguments
     ///
@@ -42,7 +42,7 @@ impl<T> Grid<T> {
         Self::try_new(width, height, initializer).expect("grid too large")
     }
 
-    /// Returns a new instance of Grid
+    /// Returns a new instance of Grid.
     ///
     /// # Arguments
     ///
@@ -98,13 +98,13 @@ impl<T> Grid<T> {
         }
     }
 
-    /// Returns the width of the grid
+    /// Returns the width of the grid.
     #[must_use]
     pub const fn width(&self) -> NonZero<usize> {
         self.width
     }
 
-    /// Returns the height of the grid
+    /// Returns the height of the grid.
     #[must_use]
     pub fn height(&self) -> NonZero<usize> {
         #[allow(unsafe_code)]
@@ -114,7 +114,7 @@ impl<T> Grid<T> {
         }
     }
 
-    /// Returns the size of the grid
+    /// Returns the size of the grid.
     ///
     /// This is equal to `grid.width() * grid.height()`
     #[must_use]
@@ -128,17 +128,13 @@ impl<T> Grid<T> {
         }
     }
 
-    /// Returns true, if the grid is empty, else false
+    /// Returns true, if the grid is empty, else false.
     #[must_use]
     pub const fn is_empty(&self) -> bool {
         self.items.is_empty()
     }
 
-    /// Returns an Option to a reference of the cell content at the given coordinate
-    ///
-    /// # Arguments
-    ///
-    /// * `coordinate` - The coordinate of the cell
+    /// Returns an Option to a reference of the cell content at the given coordinate.
     ///
     /// # Examples
     ///
@@ -172,12 +168,7 @@ impl<T> Grid<T> {
             .and_then(|index| self.items.get(index))
     }
 
-    /// Returns an Option to a mutable reference of the cell content at the given coordinate
-    ///
-    /// # Arguments
-    ///
-    /// * `coordinate` - The coordinate of the cell
-    ///
+    /// Returns an Option to a mutable reference of the cell content at the given coordinate.
     #[inline]
     pub fn get_mut(&mut self, coordinate: impl Into<Coordinate>) -> Option<&mut T> {
         coordinate
@@ -186,16 +177,16 @@ impl<T> Grid<T> {
             .and_then(|index| self.items.get_mut(index))
     }
 
-    /// Yields references to the grid's items
+    /// Yields references to the grid's items.
     ///
-    /// Iterates over columns, then rows
+    /// Iterates over columns, then rows.
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items.iter()
     }
 
-    /// Yields mutable references to the grid's items
+    /// Yields mutable references to the grid's items.
     ///
-    /// Iterates over columns, then rows
+    /// Iterates over columns, then rows.
     ///
     /// # Examples
     ///
@@ -229,7 +220,7 @@ impl<T> Grid<T> {
         self.items.iter_mut()
     }
 
-    /// Yields tuples of Coordinate and reference to the grid's items
+    /// Yields tuples of Coordinate and reference to the grid's items.
     pub fn enumerate(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         self.items
             .iter()
@@ -237,7 +228,7 @@ impl<T> Grid<T> {
             .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
     }
 
-    /// Yields tuples of Coordinate and mutable reference to the grid's items
+    /// Yields tuples of Coordinate and mutable reference to the grid's items.
     pub fn enumerate_mut(&mut self) -> impl Iterator<Item = (Coordinate, &mut T)> {
         self.items
             .iter_mut()
@@ -245,11 +236,7 @@ impl<T> Grid<T> {
             .map(|(index, item)| (Coordinate::from_width_and_index(self.width, index), item))
     }
 
-    /// Yields tuples of Coordinate and reference to the grid's items that are neighbors of the given coordinate
-    ///
-    /// # Arguments
-    ///
-    /// * `coordinate` - The coordinate whose neighbors shall be yielded
+    /// Yields tuples of Coordinate and reference to the grid's items that are neighbors of the given coordinate.
     ///
     /// # Examples
     ///
@@ -305,12 +292,7 @@ impl<T> Grid<T> {
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
 
-    /// Yields tuples of Coordinate and mutable reference to the grid's items that are neighbors of the given coordinate
-    ///
-    /// # Arguments
-    ///
-    /// * `coordinate` - The coordinate whose neighbors shall be yielded
-    ///
+    /// Yields tuples of Coordinate and mutable reference to the grid's items that are neighbors of the given coordinate.
     pub fn neighbors_mut(
         &mut self,
         coordinate: impl Into<Coordinate>,
@@ -327,7 +309,7 @@ impl<T> Grid<T> {
             .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
     }
 
-    /// Yields the rows of the grid
+    /// Yields the rows of the grid.
     ///
     /// # Examples
     ///
@@ -354,12 +336,7 @@ impl<T> Grid<T> {
         })
     }
 
-    /// Returns the coordinates that are neighbors of the given coordinate
-    ///
-    /// # Arguments
-    ///
-    /// * `coordinate` - The coordinate whose neighbors shall be yielded
-    ///
+    /// Returns the coordinates that are neighbors of the given coordinate.
     pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
         coordinate
             .into()
@@ -368,12 +345,7 @@ impl<T> Grid<T> {
             .collect()
     }
 
-    /// Determines whether the given coordinate is on the grid
-    ///
-    /// # Arguments
-    ///
-    /// * `coordinate` - The coordinate which is to be tested
-    ///
+    /// Determines whether the given coordinate is on the grid.
     pub fn encompasses(&self, coordinate: impl Into<Coordinate>) -> bool {
         self.encompasses_internal(coordinate.into())
     }
@@ -388,13 +360,7 @@ impl<T> Grid<T>
 where
     T: Default,
 {
-    /// Returns a new instance of Grid for a type that implements the Default trait
-    ///
-    /// # Arguments
-    ///
-    /// * `width` - The width of the grid
-    /// * `height` - The height of the grid
-    ///
+    /// Returns a new instance of Grid for a type that implements the Default trait.
     pub fn new_default(width: NonZero<usize>, height: NonZero<usize>) -> Self {
         Self::new(width, height, T::default)
     }
@@ -404,12 +370,7 @@ impl<T> Grid<T>
 where
     T: PartialEq,
 {
-    /// Determines whether the grid contains the given element
-    ///
-    /// # Arguments
-    ///
-    /// * `element` - The element which is to be tested
-    ///
+    /// Determines whether the grid contains the given element.
     pub fn contains(&self, element: &T) -> bool {
         self.items.contains(element)
     }
