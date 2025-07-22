@@ -1,5 +1,6 @@
 use alloc::boxed::Box;
 use alloc::vec::Vec;
+use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::Index;
 
@@ -444,24 +445,43 @@ where
     }
 }
 
-#[cfg(feature = "display")]
-mod display {
-    use core::fmt::{self, Display, Formatter};
+/// Display the grid.
+///
+/// # Examples
+///
+/// ```
+/// use std::num::NonZero;
+/// use grid2d::Grid;
+///
+/// const REFERENCE: &str = "0\t1\n2\t3\n4\t5";
+///
+/// let grid = Grid::try_from((0u8..6, NonZero::<usize>::new(2).unwrap())).unwrap();
+/// let string = grid.to_string();
+///
+/// assert_eq!(string, REFERENCE);
+/// ```
+impl<T> Display for Grid<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let max_x = self.width().get().saturating_sub(1);
+        let max_y = self.height().get().saturating_sub(1);
 
-    use itertools::Itertools;
+        for (y, row) in self.rows().enumerate() {
+            for (x, element) in row.enumerate() {
+                write!(f, "{element}")?;
 
-    use super::Grid;
-
-    impl<T> Display for Grid<T>
-    where
-        T: Display,
-    {
-        fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-            for row in self.rows() {
-                writeln!(f, "{}", row.iter().join("\t"))?;
+                if x < max_x {
+                    write!(f, "\t")?;
+                }
             }
 
-            Ok(())
+            if y < max_y {
+                writeln!(f)?;
+            }
         }
+
+        Ok(())
     }
 }

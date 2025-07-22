@@ -13,12 +13,6 @@ exclude = [".gitignore"]
 version = "0.6.4"
 edition = "2021"
 
-[dependencies]
-itertools = { version = "0.14", optional = true }
-
-[features]
-display = ["itertools/default"]
-
 [lints.rust]
 absolute_paths_not_starting_with_crate = "warn"
 elided_lifetimes_in_paths = "warn"

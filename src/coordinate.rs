@@ -1,3 +1,4 @@
+use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::Add;
 use core::str::FromStr;
@@ -150,9 +151,8 @@ impl FromStr for Coordinate {
     }
 }
 
-#[cfg(feature = "display")]
-impl core::fmt::Display for Coordinate {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+impl Display for Coordinate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}x{}", self.x, self.y)
     }
 }
