@@ -328,15 +328,29 @@ impl<T> Grid<T> {
     }
 
     /// Yields the rows of the grid
-    pub fn rows(&self) -> impl Iterator<Item = Vec<&T>> {
-        (0..self.height().get()).map(|y| {
-            (0..self.width.get())
-                .filter_map(|x| {
-                    Coordinate::new(x, y)
-                        .as_index(self.width)
-                        .map(|index| &self.items[index])
-                })
-                .collect()
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::num::NonZero;
+    /// use grid2d::Grid;
+    ///
+    /// let grid = Grid::try_from((0u8..6, NonZero::<usize>::new(2).unwrap())).unwrap();
+    /// let rows: [[u8; 2]; 3] = [[0, 1], [2, 3], [4, 5]];
+    ///
+    /// for (row, target) in grid.rows().zip(rows.iter()) {
+    ///     for (column, target) in row.zip(target) {
+    ///         assert_eq!(column, target);
+    ///     }
+    /// }
+    /// ```
+    pub fn rows(&self) -> impl Iterator<Item = impl Iterator<Item = &T>> {
+        (0..self.height().get()).map(move |y| {
+            (0..self.width.get()).filter_map(move |x| {
+                Coordinate::new(x, y)
+                    .as_index(self.width)
+                    .map(|index| &self.items[index])
+            })
         })
     }
 
