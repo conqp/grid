@@ -419,13 +419,13 @@ where
 /// assert_eq!(grid[(0, 2)], 4);
 /// assert_eq!(grid[(1, 2)], 5);
 /// ```
-impl<T, C> Index<C> for Grid<T>
+impl<T, I> Index<I> for Grid<T>
 where
-    C: Into<Coordinate>,
+    I: Into<Coordinate>,
 {
     type Output = T;
 
-    fn index(&self, index: C) -> &Self::Output {
+    fn index(&self, index: I) -> &Self::Output {
         self.get(index).expect("index out of bounds")
     }
 }
