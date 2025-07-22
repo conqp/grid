@@ -1,6 +1,7 @@
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 use core::num::NonZero;
+use core::ops::Index;
 
 use crate::Coordinate;
 
@@ -398,6 +399,34 @@ where
     ///
     pub fn contains(&self, element: &T) -> bool {
         self.items.contains(element)
+    }
+}
+
+/// Return the element at the respective position.
+///
+/// # Examples
+///
+/// ```
+/// use std::num::NonZero;
+/// use grid2d::Grid;
+///
+/// let grid = Grid::try_from((0u8..6, NonZero::<usize>::new(2).expect("non-zero usize is zero"))).expect("invalid grid");
+///
+/// assert_eq!(grid[(0, 0)], 0);
+/// assert_eq!(grid[(1, 0)], 1);
+/// assert_eq!(grid[(0, 1)], 2);
+/// assert_eq!(grid[(1, 1)], 3);
+/// assert_eq!(grid[(0, 2)], 4);
+/// assert_eq!(grid[(1, 2)], 5);
+/// ```
+impl<T, C> Index<C> for Grid<T>
+where
+    C: Into<Coordinate>,
+{
+    type Output = T;
+
+    fn index(&self, index: C) -> &Self::Output {
+        self.get(index).expect("index out of bounds")
     }
 }
 
