@@ -69,6 +69,10 @@ impl Coordinate {
     ///
     #[must_use]
     pub fn as_index(&self, width: NonZero<usize>) -> Option<usize> {
+        if self.x >= width.get() {
+            return None;
+        }
+
         self.y
             .checked_mul(width.into())
             .and_then(|row| row.checked_add(self.x))
