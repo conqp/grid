@@ -3,7 +3,7 @@ use alloc::vec::Vec;
 use core::borrow::Borrow;
 use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
-use core::ops::{Deref, DerefMut, Index};
+use core::ops::{Deref, DerefMut, Index, IndexMut};
 
 use crate::Coordinate;
 
@@ -503,6 +503,15 @@ where
 
     fn index(&self, index: I) -> &Self::Output {
         self.get(index).expect("index out of bounds")
+    }
+}
+
+impl<T, I> IndexMut<I> for Grid<T>
+where
+    I: Into<Coordinate>,
+{
+    fn index_mut(&mut self, index: I) -> &mut Self::Output {
+        self.get_mut(index).expect("index out of bounds")
     }
 }
 
