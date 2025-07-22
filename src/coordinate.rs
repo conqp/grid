@@ -83,58 +83,6 @@ impl Add<&(isize, isize)> for &Coordinate {
     }
 }
 
-/// Create a Coordinate from a `&str`.
-///
-/// # Examples
-///
-/// ```
-/// use core::num::IntErrorKind;
-/// use core::str::FromStr;
-/// use grid2d::{Coordinate, CoordinateParseError};
-///
-/// assert!(match Coordinate::from_str("-1 1").unwrap_err() {
-///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
-///     _ => false,
-/// });
-/// assert!(match Coordinate::from_str("1,-1").unwrap_err() {
-///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
-///     _ => false,
-/// });
-/// assert!(match Coordinate::from_str("a 42").unwrap_err() {
-///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
-///     _ => false,
-/// });
-/// assert!(match Coordinate::from_str("42xa").unwrap_err() {
-///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
-///     _ => false,
-/// });
-/// assert_eq!(Coordinate::from_str("42").err(), Some(CoordinateParseError::NotTwoNumbers));
-/// assert!(match Coordinate::from_str(" 42").unwrap_err() {
-///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::Empty,
-///     _ => false,
-/// });
-/// assert_eq!(Coordinate::from_str("abc").err(), Some(CoordinateParseError::NotTwoNumbers));
-/// assert!(match Coordinate::from_str("42, ").unwrap_err() {
-///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::Empty,
-///     _ => false,
-/// });
-/// assert_eq!(Coordinate::from_str("42x1337").ok(), Some(Coordinate::new(42, 1337)));
-/// assert_eq!(Coordinate::from_str("0, 0").ok(), Some(Coordinate::new(0, 0)));
-/// ```
-impl FromStr for Coordinate {
-    type Err = CoordinateParseError;
-
-    fn from_str(string: &str) -> Result<Self, Self::Err> {
-        match SUPPORTED_SEPARATORS
-            .into_iter()
-            .find_map(|char| string.split_once(char))
-        {
-            Some((x, y)) => Self::try_from((x.trim(), y.trim())),
-            None => Err(CoordinateParseError::NotTwoNumbers),
-        }
-    }
-}
-
 impl Display for Coordinate {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}x{}", self.x, self.y)
@@ -268,6 +216,58 @@ impl From<Coordinate> for [usize; 2] {
 impl From<&Coordinate> for [usize; 2] {
     fn from(coordinate: &Coordinate) -> Self {
         [coordinate.x, coordinate.y]
+    }
+}
+
+/// Create a Coordinate from a `&str`.
+///
+/// # Examples
+///
+/// ```
+/// use core::num::IntErrorKind;
+/// use core::str::FromStr;
+/// use grid2d::{Coordinate, CoordinateParseError};
+///
+/// assert!(match Coordinate::from_str("-1 1").unwrap_err() {
+///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert!(match Coordinate::from_str("1,-1").unwrap_err() {
+///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert!(match Coordinate::from_str("a 42").unwrap_err() {
+///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert!(match Coordinate::from_str("42xa").unwrap_err() {
+///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::InvalidDigit,
+///     _ => false,
+/// });
+/// assert_eq!(Coordinate::from_str("42").err(), Some(CoordinateParseError::NotTwoNumbers));
+/// assert!(match Coordinate::from_str(" 42").unwrap_err() {
+///     CoordinateParseError::InvalidXValue(e) => e.kind() == &IntErrorKind::Empty,
+///     _ => false,
+/// });
+/// assert_eq!(Coordinate::from_str("abc").err(), Some(CoordinateParseError::NotTwoNumbers));
+/// assert!(match Coordinate::from_str("42, ").unwrap_err() {
+///     CoordinateParseError::InvalidYValue(e) => e.kind() == &IntErrorKind::Empty,
+///     _ => false,
+/// });
+/// assert_eq!(Coordinate::from_str("42x1337").ok(), Some(Coordinate::new(42, 1337)));
+/// assert_eq!(Coordinate::from_str("0, 0").ok(), Some(Coordinate::new(0, 0)));
+/// ```
+impl FromStr for Coordinate {
+    type Err = CoordinateParseError;
+
+    fn from_str(string: &str) -> Result<Self, Self::Err> {
+        match SUPPORTED_SEPARATORS
+            .into_iter()
+            .find_map(|char| string.split_once(char))
+        {
+            Some((x, y)) => Self::try_from((x.trim(), y.trim())),
+            None => Err(CoordinateParseError::NotTwoNumbers),
+        }
     }
 }
 
