@@ -410,7 +410,7 @@ where
 /// use std::num::NonZero;
 /// use grid2d::Grid;
 ///
-/// let grid = Grid::try_from((0u8..6, NonZero::<usize>::new(2).expect("non-zero usize is zero"))).expect("invalid grid");
+/// let grid = Grid::try_from((0u8..6, NonZero::<usize>::new(2).unwrap())).unwrap();
 ///
 /// assert_eq!(grid[(0, 0)], 0);
 /// assert_eq!(grid[(1, 0)], 1);
