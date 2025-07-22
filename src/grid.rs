@@ -338,6 +338,33 @@ impl<T> Grid<T> {
         })
     }
 
+    /// Yields the columns of the grid.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::num::NonZero;
+    /// use grid2d::Grid;
+    ///
+    /// let grid = Grid::try_from((0u8..6, NonZero::<usize>::new(2).unwrap())).unwrap();
+    /// let columns: [[u8; 3]; 2] = [[0, 2, 4], [1, 3, 5]];
+    ///
+    /// for (column, target) in grid.columns().zip(columns.iter()) {
+    ///     for (item, target) in column.zip(target) {
+    ///         assert_eq!(item, target);
+    ///     }
+    /// }
+    /// ```
+    pub fn columns(&self) -> impl Iterator<Item = impl Iterator<Item = &T>> {
+        (0..self.width.get()).map(move |x| {
+            (0..self.height().get()).filter_map(move |y| {
+                Coordinate::new(x, y)
+                    .as_index(self.width)
+                    .map(|index| &self.items[index])
+            })
+        })
+    }
+
     /// Returns the coordinates that are neighbors of the given coordinate.
     pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
         coordinate
