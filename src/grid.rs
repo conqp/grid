@@ -289,7 +289,6 @@ impl<T> Grid<T> {
     /// assert_eq!(grid.neighbors(Coordinate::new(2, 2)).count(), 5);
     /// assert_eq!(grid.neighbors(Coordinate::new(2, 3)).count(), 3);
     /// ```
-    #[inline]
     pub fn neighbors(
         &self,
         coordinate: impl Into<Coordinate>,
@@ -297,6 +296,7 @@ impl<T> Grid<T> {
         self.neighbors_internal(self.neighbor_coordinates(coordinate))
     }
 
+    #[inline]
     fn neighbors_internal(
         &self,
         neighbors: Vec<Coordinate>,
@@ -311,7 +311,6 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate whose neighbors shall be yielded
     ///
-    #[inline]
     pub fn neighbors_mut(
         &mut self,
         coordinate: impl Into<Coordinate>,
@@ -319,6 +318,7 @@ impl<T> Grid<T> {
         self.neighbors_mut_internal(self.neighbor_coordinates(coordinate))
     }
 
+    #[inline]
     fn neighbors_mut_internal(
         &mut self,
         neighbors: Vec<Coordinate>,
@@ -360,7 +360,6 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate whose neighbors shall be yielded
     ///
-    #[inline]
     pub fn neighbor_coordinates(&self, coordinate: impl Into<Coordinate>) -> Vec<Coordinate> {
         coordinate
             .into()
@@ -375,11 +374,11 @@ impl<T> Grid<T> {
     ///
     /// * `coordinate` - The coordinate which is to be tested
     ///
-    #[inline]
     pub fn encompasses(&self, coordinate: impl Into<Coordinate>) -> bool {
         self.encompasses_internal(coordinate.into())
     }
 
+    #[inline]
     fn encompasses_internal(&self, coordinate: Coordinate) -> bool {
         coordinate.x() < self.width.get() && coordinate.y() < self.height().get()
     }
