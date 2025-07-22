@@ -5,7 +5,7 @@ use core::str::FromStr;
 
 use crate::CoordinateParseError;
 
-/// Coordinate of a cell on a two-dimensional grid
+/// Coordinate of a cell on a two-dimensional grid.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Coordinate {
     x: usize,
@@ -26,25 +26,13 @@ const NEIGHBOR_OFFSETS: [(isize, isize); 8] = [
 const SUPPORTED_SEPARATORS: [char; 3] = ['x', ',', ' '];
 
 impl Coordinate {
-    /// Creates a new coordinate
-    ///
-    /// # Arguments
-    ///
-    /// * `x` - The x component
-    /// * `y` - The y component
-    ///
+    /// Creates a new coordinate.
     #[must_use]
     pub const fn new(x: usize, y: usize) -> Self {
         Self { x, y }
     }
 
-    /// Creates a coordinate from a grid's width and a total index
-    ///
-    /// # Arguments
-    ///
-    /// * `width` - The grid's width
-    /// * `index` - The index of the cell
-    ///
+    /// Creates a coordinate from a grid's width and a total index.
     #[must_use]
     pub fn from_width_and_index(width: NonZero<usize>, index: usize) -> Self {
         let x = index % width;
@@ -63,11 +51,7 @@ impl Coordinate {
         self.y
     }
 
-    /// Converts the coordinate into a linear index
-    ///
-    /// # Arguments
-    /// * `width` - The width of the grid
-    ///
+    /// Converts the coordinate into a linear index.
     #[must_use]
     pub fn as_index(&self, width: NonZero<usize>) -> Option<usize> {
         if self.x >= width.get() {
@@ -79,7 +63,7 @@ impl Coordinate {
             .and_then(|row| row.checked_add(self.x))
     }
 
-    /// Returns all potential neighboring coordinates
+    /// Returns all potential neighboring coordinates.
     pub fn neighbors(&self) -> impl Iterator<Item = Self> + '_ {
         NEIGHBOR_OFFSETS
             .iter()
@@ -99,7 +83,7 @@ impl Add<&(isize, isize)> for &Coordinate {
     }
 }
 
-/// Create a Coordinate from a `&str`
+/// Create a Coordinate from a `&str`.
 ///
 /// # Examples
 ///
@@ -163,7 +147,7 @@ impl From<&Self> for Coordinate {
     }
 }
 
-/// Create a coordinate from a `(usize, usize)` tuple
+/// Create a coordinate from a `(usize, usize)` tuple.
 ///
 /// # Examples
 ///
@@ -178,7 +162,7 @@ impl From<(usize, usize)> for Coordinate {
     }
 }
 
-/// Create a Coordinate from a reference to a `(usize, usize)` tuple
+/// Create a Coordinate from a reference to a `(usize, usize)` tuple.
 ///
 /// # Examples
 ///
@@ -193,7 +177,7 @@ impl From<&(usize, usize)> for Coordinate {
     }
 }
 
-/// Create a coordinate from a `[usize; 2]`
+/// Create a coordinate from a `[usize; 2]`.
 ///
 /// # Examples
 ///
@@ -208,7 +192,7 @@ impl From<[usize; 2]> for Coordinate {
     }
 }
 
-/// Create a Coordinate from a reference to a `[usize; 2]`
+/// Create a Coordinate from a reference to a `[usize; 2]`.
 ///
 /// # Examples
 ///
@@ -223,7 +207,7 @@ impl From<&[usize; 2]> for Coordinate {
     }
 }
 
-/// Create a `(usize, usize)` tuple tuple from a Coordinate
+/// Create a `(usize, usize)` tuple tuple from a Coordinate.
 ///
 /// # Examples
 ///
@@ -239,7 +223,7 @@ impl From<Coordinate> for (usize, usize) {
     }
 }
 
-/// Create a `(usize, usize)` tuple from a Coordinate reference
+/// Create a `(usize, usize)` tuple from a Coordinate reference.
 ///
 /// # Examples
 ///
@@ -255,7 +239,7 @@ impl From<&Coordinate> for (usize, usize) {
     }
 }
 
-/// Create a `[usize; 2]` array tuple from a Coordinate
+/// Create a `[usize; 2]` array tuple from a Coordinate.
 ///
 /// # Examples
 ///
@@ -271,7 +255,7 @@ impl From<Coordinate> for [usize; 2] {
     }
 }
 
-/// Create a `[usize; 2]` array from a Coordinate reference
+/// Create a `[usize; 2]` array from a Coordinate reference.
 ///
 /// # Examples
 ///
