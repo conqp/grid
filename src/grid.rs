@@ -1,6 +1,6 @@
 use alloc::boxed::Box;
 use alloc::vec::Vec;
-use core::borrow::Borrow;
+use core::borrow::{Borrow, BorrowMut};
 use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::{Deref, DerefMut, Index, IndexMut};
@@ -420,6 +420,12 @@ impl<T> AsRef<[T]> for Grid<T> {
 impl<T> Borrow<[T]> for Grid<T> {
     fn borrow(&self) -> &[T] {
         &self.items
+    }
+}
+
+impl<T> BorrowMut<[T]> for Grid<T> {
+    fn borrow_mut(&mut self) -> &mut [T] {
+        &mut self.items
     }
 }
 
