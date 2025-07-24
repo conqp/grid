@@ -3,10 +3,12 @@
 #![deny(unsafe_code)]
 extern crate alloc;
 
+pub use builder::GridBuilder;
 pub use coordinate::Coordinate;
-pub use errors::CoordinateParseError;
+pub use errors::{BuildError, CoordinateParseError};
 pub use grid::Grid;
 
+mod builder;
 mod coordinate;
 mod errors;
 mod grid;
