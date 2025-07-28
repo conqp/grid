@@ -17,13 +17,8 @@ pub struct Grid<T> {
 impl<T> Grid<T> {
     /// Returns a new instance of Grid.
     ///
-    /// # Arguments
-    ///
-    /// * `width` - The width of the grid
-    /// * `height` - The height of the grid
-    /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
-    ///
     /// # Panics
+    ///
     /// This function may panic if the grid size is too lange to fit into a `usize`.
     ///
     /// # Examples
@@ -45,12 +40,6 @@ impl<T> Grid<T> {
     }
 
     /// Returns a new instance of Grid.
-    ///
-    /// # Arguments
-    ///
-    /// * `width` - The width of the grid
-    /// * `height` - The height of the grid
-    /// * `initializer` - A function that takes no arguments and returns an instance of the cell type
     ///
     /// # Errors
     ///
