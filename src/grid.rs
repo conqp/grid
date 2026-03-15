@@ -522,6 +522,8 @@ where
 /// let width = NonZero::new(4).unwrap();
 /// let items2 = [1, 2, 3, 4, 5, 6, 7, 8];
 /// let width2 = NonZero::new(3).unwrap();
+/// let items3: [i32; 0] = [];
+/// let width3 = NonZero::new(3).unwrap();
 ///
 /// assert!(Grid::try_from((items.clone(), width)).is_ok());
 /// assert!(Grid::try_from((items.clone().iter(), width)).is_ok());
@@ -529,6 +531,10 @@ where
 /// assert_eq!(
 ///     Grid::try_from((items.clone(), width2)),
 ///     Err(FromIterableError::SizeNotMultipleOfWidth)
+/// );
+/// assert_eq!(
+///     Grid::try_from((items3, width2)),
+///     Err(FromIterableError::EmptyIterable)
 /// );
 /// ```
 impl<T> TryFrom<(T, NonZero<usize>)> for Grid<T::Item>
