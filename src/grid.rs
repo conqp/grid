@@ -5,7 +5,7 @@ use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::{Deref, DerefMut, Index, IndexMut};
 
-use crate::Coordinate;
+use crate::{Coordinate, FromIterableError};
 
 /// A two-dimensional grid of arbitrary cell content.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -535,17 +535,22 @@ impl<T> TryFrom<(T, NonZero<usize>)> for Grid<T::Item>
 where
     T: IntoIterator,
 {
-    type Error = ();
+    type Error = FromIterableError;
 
     fn try_from((into_iterator, width): (T, NonZero<usize>)) -> Result<Self, Self::Error> {
         let items = into_iterator.into_iter().collect::<Vec<_>>();
 
-        if items.len() % width == 0 {
-            #[expect(unsafe_code)]
-            // SAFETY: In the line above, we checked that `items.len()` is a multiple of `width`.
-            Ok(unsafe { Self::new_unchecked(width, items) })
-        } else {
-            Err(())
+        if items.is_empty() {
+            return Err(FromIterableError::EmptyIterable);
         }
+
+        if items.len() % width != 0 {
+            return Err(FromIterableError::SizeNotMultipleOfWidth);
+        }
+
+        #[expect(unsafe_code)]
+        // SAFETY: In the lines above, we checked that `items` is not empty
+        // and that `items.len()` is a multiple of `width`.
+        Ok(unsafe { Self::new_unchecked(width, items) })
     }
 }

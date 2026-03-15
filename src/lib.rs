@@ -5,7 +5,7 @@ extern crate alloc;
 
 pub use builder::GridBuilder;
 pub use coordinate::Coordinate;
-pub use errors::{BuildError, CoordinateParseError};
+pub use errors::{BuildError, CoordinateParseError, FromIterableError};
 pub use grid::Grid;
 
 mod builder;
