@@ -3,10 +3,10 @@
 #![deny(unsafe_code)]
 extern crate alloc;
 
-pub use builder::GridBuilder;
-pub use coordinate::Coordinate;
-pub use errors::{BuildError, CoordinateParseError, FromIterableError};
-pub use grid::Grid;
+pub use self::builder::GridBuilder;
+pub use self::coordinate::Coordinate;
+pub use self::errors::{BuildError, CoordinateParseError, FromIterableError};
+pub use self::grid::Grid;
 
 mod builder;
 mod coordinate;
