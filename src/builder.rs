@@ -183,7 +183,7 @@ impl<T> GridBuilder<T> {
                     .checked_mul(height)
                     .is_some_and(|size| self.items.len() == size.get())
                 {
-                    #[allow(unsafe_code)]
+                    #[expect(unsafe_code)]
                     // SAFETY: We just checked that the width and height match the items size.
                     Ok(unsafe { Grid::new_unchecked(width, self.items) })
                 } else {
@@ -196,7 +196,7 @@ impl<T> GridBuilder<T> {
                 } else if self.items.len() % width != 0 {
                     Err(BuildError::SizeNotMultipleOfWidth(self.items))
                 } else {
-                    #[allow(unsafe_code)]
+                    #[expect(unsafe_code)]
                     // SAFETY: We just checked that the width matches the items size.
                     Ok(unsafe { Grid::new_unchecked(width, self.items) })
                 }
@@ -213,7 +213,7 @@ impl<T> GridBuilder<T> {
                         }
                     })
                 {
-                    #[allow(unsafe_code)]
+                    #[expect(unsafe_code)]
                     // SAFETY: We just checked that the width matches the items size.
                     Ok(unsafe { Grid::new_unchecked(width, self.items) })
                 } else {
