@@ -516,7 +516,7 @@ where
 ///
 /// ```
 /// use std::num::NonZero;
-/// use grid2d::Grid;
+/// use grid2d::{FromIterableError, Grid};
 ///
 /// let items = vec![1, 2, 3, 4, 5, 6, 7, 8];
 /// let width = NonZero::new(4).unwrap();
@@ -528,7 +528,7 @@ where
 /// assert!(Grid::try_from((items2, width)).is_ok());
 /// assert_eq!(
 ///     Grid::try_from((items.clone(), width2)),
-///     Err(())
+///     Err(FromIterableError::SizeNotMultipleOfWidth)
 /// );
 /// ```
 impl<T> TryFrom<(T, NonZero<usize>)> for Grid<T::Item>
