@@ -1,11 +1,12 @@
 use alloc::boxed::Box;
+use alloc::vec;
 use alloc::vec::Vec;
 use core::borrow::{Borrow, BorrowMut};
 use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::{Deref, DerefMut, Index, IndexMut};
 
-use crate::{Coordinate, FromIterableError};
+use crate::{Coordinate, FromIterableError, GridBuilder};
 
 /// A two-dimensional grid of arbitrary cell content.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -87,6 +88,12 @@ impl<T> Grid<T> {
             width,
             items: items.into_boxed_slice(),
         }
+    }
+
+    /// Create a new `GridBuilder`.
+    #[must_use]
+    pub const fn build() -> GridBuilder<T> {
+        GridBuilder::new(vec![])
     }
 
     /// Returns the width of the grid.
