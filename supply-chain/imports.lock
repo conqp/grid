@@ -1,0 +1,6 @@
+
+# cargo-vet imports lock
+
+[[unpublished.grid2d]]
+version = "3.0.0"
+audited_as = "2.0.0"
