@@ -64,10 +64,10 @@ impl Coordinate {
     }
 
     /// Returns all potential neighboring coordinates.
-    pub fn neighbors(&self) -> impl Iterator<Item = Self> + '_ {
+    pub fn neighbors(self) -> impl Iterator<Item = Self> {
         NEIGHBOR_OFFSETS
-            .iter()
-            .filter_map(move |offset| self + offset)
+            .into_iter()
+            .filter_map(move |offset| &self + &offset)
     }
 }
 

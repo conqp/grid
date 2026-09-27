@@ -6,7 +6,7 @@ use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::{Deref, DerefMut, Index, IndexMut};
 
-use crate::{Coordinate, FromIterableError, GridBuilder};
+use crate::{Coordinate, FromIterableError, GridBuilder, neighbors_mut::NeighborsMut};
 
 /// A two-dimensional grid of arbitrary cell content.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -278,19 +278,28 @@ impl<T> Grid<T> {
         &self,
         coordinate: impl Into<Coordinate>,
     ) -> impl Iterator<Item = (Coordinate, &T)> {
-        self.neighbors_internal(self.neighbor_coordinates(coordinate))
+        let coordinate = coordinate.into();
+        coordinate
+            .neighbors()
+            .filter_map(move |coordinate| self.get(coordinate).map(|item| (coordinate, item)))
     }
-
-    #[inline]
-    fn neighbors_internal(
-        &self,
-        neighbors: Vec<Coordinate>,
-    ) -> impl Iterator<Item = (Coordinate, &T)> {
-        self.enumerate()
-            .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
-    }
-
-    /// Yields tuples of Coordinate and mutable reference to the grid's items that are neighbors of the given coordinate.
+    /// Yields tuples of Coordinate and mutable references to the grid's items that are neighbors of the given coordinate.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::num::NonZero;
+    /// use grid2d::Grid;
+    ///
+    /// let mut grid = Grid::new(NonZero::new(3).unwrap(), NonZero::new(3).unwrap(), || 0);
+    ///
+    /// for (_, item) in grid.neighbors_mut((1, 1)) {
+    ///     *item = 1;
+    /// }
+    ///
+    /// assert_eq!(grid[(1, 1)], 0);
+    /// assert_eq!(grid.iter().filter(|&&item| item == 1).count(), 8);
+    /// ```
     pub fn neighbors_mut(
         &mut self,
         coordinate: impl Into<Coordinate>,
@@ -299,12 +308,8 @@ impl<T> Grid<T> {
     }
 
     #[inline]
-    fn neighbors_mut_internal(
-        &mut self,
-        neighbors: Vec<Coordinate>,
-    ) -> impl Iterator<Item = (Coordinate, &mut T)> {
-        self.enumerate_mut()
-            .filter(move |(position, _)| neighbors.iter().any(|neighbor| neighbor == position))
+    fn neighbors_mut_internal(&mut self, neighbors: Vec<Coordinate>) -> NeighborsMut<'_, T> {
+        NeighborsMut::new(self.width, &mut self.items, neighbors.into_iter())
     }
 
     /// Yields the rows of the grid.

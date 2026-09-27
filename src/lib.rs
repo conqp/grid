@@ -12,3 +12,4 @@ mod builder;
 mod coordinate;
 mod errors;
 mod grid;
+mod neighbors_mut;
