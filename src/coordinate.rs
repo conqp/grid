@@ -155,7 +155,7 @@ impl From<&[usize; 2]> for Coordinate {
     }
 }
 
-/// Create a `(usize, usize)` tuple tuple from a Coordinate.
+/// Create a `(usize, usize)` tuple from a Coordinate.
 ///
 /// # Examples
 ///

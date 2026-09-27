@@ -6,7 +6,8 @@ use core::fmt::{self, Display, Formatter};
 use core::num::NonZero;
 use core::ops::{Deref, DerefMut, Index, IndexMut};
 
-use crate::{Coordinate, FromIterableError, GridBuilder, neighbors_mut::NeighborsMut};
+use crate::neighbors_mut::NeighborsMut;
+use crate::{Coordinate, FromIterableError, GridBuilder};
 
 /// A two-dimensional grid of arbitrary cell content.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
@@ -44,7 +45,7 @@ impl<T> Grid<T> {
     ///
     /// # Errors
     ///
-    /// This function returns `None` if the grid size is too lange to fit into a `usize`.
+    /// This function returns `None` if the grid size is too large to fit into a `usize`.
     ///
     /// # Examples
     ///
